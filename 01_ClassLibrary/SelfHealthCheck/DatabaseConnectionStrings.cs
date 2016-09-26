@@ -1,12 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace SelfHealthCheck
+﻿namespace SelfHealthCheck
 {
-    public class DatabaseConnectionStrings
+    /// <summary>
+    /// DatabaseConnectionStrings class - with respect to Self Health Check,
+    /// this class includes all of the methods necessary for checking
+    /// the health of the database connection strings.
+    /// </summary>
+    public class DatabaseConnectionStrings : Interfaces.IDatabaseConnectionStrings
     {
+        /// <summary>
+        /// Determines if the connection strings in the configuration file are valid
+        /// </summary>
+        /// <returns></returns>
         public string Validate()
         {
             var connectionStringSettings = System.Configuration.ConfigurationManager.ConnectionStrings;

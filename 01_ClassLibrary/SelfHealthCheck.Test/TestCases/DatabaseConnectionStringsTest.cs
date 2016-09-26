@@ -1,11 +1,16 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace SelfHealthCheck.Test.TestCases
+﻿namespace SelfHealthCheck.Test.TestCases
 {
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+    /// <summary>
+    /// DatabaseConnectionStrings Tests
+    /// </summary>
     [TestClass]
     public class DatabaseConnectionStringsTest
     {
+        /// <summary>
+        /// Not so much a test as a driver for the Validate method
+        /// </summary>
         [TestMethod]
         public void Driver()
         {
