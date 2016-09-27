@@ -14,7 +14,8 @@
         [TestMethod]
         public void Driver()
         {
-            var expectedResult = "Either no configuration file exists or no connectionString entry exists";
+            var expectedResult = new POCO.DatabaseConnectionStringResult();
+            expectedResult.Name = "Either no configuration file exists or no connectionString entry exists";
 
             var databaseConnectionStrings = new DatabaseConnectionStrings();
 

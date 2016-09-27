@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="DatabaseConnectionStrings.cs" />
     <Compile Include="Interfaces\IDatabaseConnectionStrings.cs" />
+    <Compile Include="POCO\DatabaseConnectionStringResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
