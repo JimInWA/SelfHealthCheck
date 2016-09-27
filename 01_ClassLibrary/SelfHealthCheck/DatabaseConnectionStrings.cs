@@ -16,20 +16,19 @@
         public POCO.DatabaseConnectionStringResult Validate()
         {
             // TODOs:
-            // 1. Update the logic in loop to use splits for connectionString
-            // 2. Figure out how to write the following tests using FakeItEasy
-            //    2a. Simulate App.config that has a connectionStrings section with the 
+            // 1. Figure out how to write the following tests using FakeItEasy
+            //    1a. Simulate App.config that has a connectionStrings section with the 
             //        existing SampleLoggingConnectionString 
-            //    2b. Simulate App.config that has a connectionStrings section with the 
+            //    1b. Simulate App.config that has a connectionStrings section with the 
             //        existing SampleLoggingConnectionString 
-            // 3. Determine how to represent a list of results along with an error message
-            // 4. Figure out how to write the following tests using FakeItEasy
-            //    4a. Simulate no App.config - verify that you get the expected error
-            //    4b. Simulate App.config that doesn't have a connectionStrings section
+            // 2. Determine how to represent a list of results along with an error message
+            // 3. Figure out how to write the following tests using FakeItEasy
+            //    3a. Simulate no App.config - verify that you get the expected error
+            //    3b. Simulate App.config that doesn't have a connectionStrings section
             //        - verify that you get the expected error
-            //    4c. Simulate App.config that has multiple connectionStrings
+            //    3c. Simulate App.config that has multiple connectionStrings
             //        - verify that you get the expected error
-            // 5. Once we have the above test coverage, refactor the logic out
+            // 4. Once we have the above test coverage, refactor the logic out
             //    of the Validate method but make sure the tests continue to pass
             var connectionStringSettings = System.Configuration.ConfigurationManager.ConnectionStrings;
             var result = new POCO.DatabaseConnectionStringResult();
@@ -44,34 +43,31 @@
 
             for (int i = 2; i < connectionStringSettings.Count; i++)
             {
-                var setting = connectionStringSettings[i];
-                result.Name = setting.Name;
+                result.Name = connectionStringSettings[i].Name;
+                string[] connectionStringItems = connectionStringSettings[i].ConnectionString.Split(';');
 
-                var connectionString = setting.ConnectionString;
-                // Positive case only for right now, exact spacing and punctuation matching below
-                // Data Source=.;Initial Catalog=SampleLogging_Tests;integrated security=SSPI;
-
-                var searchString = "Data Source=";
-                var dataSourceStubStart = connectionString.IndexOf(searchString, StringComparison.CurrentCultureIgnoreCase);
-                var dataSourceStubEnd = connectionString.IndexOf(";");
-                var startingPoint = dataSourceStubStart + searchString.Length;
-                var endingPoint = dataSourceStubEnd - startingPoint;
-                result.DatabaseSource = connectionString.Substring(startingPoint, endingPoint);
-                connectionString = connectionString.Remove(0, dataSourceStubEnd + 1);
-
-                searchString = "Initial Catalog=";
-                var initialCatalogStubStart = connectionString.IndexOf(searchString, StringComparison.CurrentCultureIgnoreCase);
-                var initialCatalogStubEnd = connectionString.IndexOf(";");
-                startingPoint = initialCatalogStubStart + searchString.Length;
-                endingPoint = initialCatalogStubEnd - startingPoint;
-                result.InitialCatalog = connectionString.Substring(startingPoint, endingPoint);
-                connectionString = connectionString.Remove(0, initialCatalogStubEnd + 1);
-
-                searchString = "integrated security=";
-                var integratedSecurityStringLocation = connectionString.IndexOf(searchString, StringComparison.CurrentCultureIgnoreCase);
-                if (integratedSecurityStringLocation != -1)
+                var dataSourceSearchString = "Data Source=";
+                var initialCatalogSearchString = "Initial Catalog=";
+                var integratedSecuritySearchString = "integrated security=";
+                foreach (string individualItem in connectionStringItems)
                 {
-                    result.IsUsingIntegratedSecurity = true;
+                    if (!string.IsNullOrWhiteSpace(individualItem))
+                    {
+                        var localIndividualItem = individualItem.Replace(" =", "=").Replace("= ", "=");
+
+                        if (localIndividualItem.StartsWith(dataSourceSearchString))
+                        {
+                            result.DatabaseSource = localIndividualItem.Substring(dataSourceSearchString.Length, localIndividualItem.Length - dataSourceSearchString.Length).Trim();
+                        }
+                        else if (localIndividualItem.StartsWith(initialCatalogSearchString))
+                        {
+                            result.InitialCatalog = localIndividualItem.Substring(initialCatalogSearchString.Length, localIndividualItem.Length - initialCatalogSearchString.Length).Trim();
+                        }
+                        else if (localIndividualItem.StartsWith(integratedSecuritySearchString))
+                        {
+                            result.IsUsingIntegratedSecurity = true;
+                        }
+                    }
                 }
             }
 
