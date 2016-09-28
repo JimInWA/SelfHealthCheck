@@ -42,7 +42,7 @@
         public string[] GetWhiteListDataSourceItems()
         {
             var whiteListDataSourceItemsRaw = _customConfigurationManager.AppSettings.Get("WhiteListDataSourceItems");
-            string[] result = (whiteListDataSourceItemsRaw == null) ? new string[0] : whiteListDataSourceItemsRaw.Split(';');
+            string[] result = (whiteListDataSourceItemsRaw == null) ? new string[0] : whiteListDataSourceItemsRaw.Split(',');
 
             return result;
         }

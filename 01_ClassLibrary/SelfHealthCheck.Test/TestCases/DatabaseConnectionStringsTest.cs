@@ -147,10 +147,10 @@
         }
 
         /// <summary>
-        /// When_ConnectionStrings_in_configuration_file_has_one_entry_Validate_Method_and_WhiteListDataSourceItems_has_one_item_returns_the_distinct_values_for_the_one_entry(
+        /// public void When_ConnectionStrings_in_configuration_file_has_one_entry_and_WhiteList_has_one_value_Validate_Method_returns_the_distinct_values_for_the_one_entry
         /// </summary>
         [TestMethod]
-        public void When_ConnectionStrings_in_configuration_file_has_one_entry_Validate_Method_returns_the_distinct_values_for_the_one_entry()
+        public void When_ConnectionStrings_in_configuration_file_has_one_entry_and_WhiteList_has_one_value_Validate_Method_returns_the_distinct_values_for_the_one_entry()
         {
             // Arrange            
             var expectedFakeConnectionStrings = new ConnectionStringSettingsCollection();
@@ -158,6 +158,38 @@
             A.CallTo(() => _fakeCustomConfigurationManager.ConnectionStrings).Returns(expectedFakeConnectionStrings);
 
             A.CallTo(() => _fakeCustomConfigurationManager.AppSettings.Get("WhiteListDataSourceItems")).Returns("TestDataSource");
+
+            var expectedResult = new POCO.DatabaseConnectionStringResult()
+            {
+                Name = "TestName",
+                DatabaseSource = "TestDataSource",
+                InitialCatalog = "TestInitialCatalog",
+                IsUsingIntegratedSecurity = true
+            };
+
+            // Act
+            var actualResult = _databaseConnectionStrings.Validate();
+
+            // Assert
+            Assert.IsNotNull(actualResult);
+            Assert.AreEqual(expectedResult.Name, actualResult.Name, "Validate method returned unexpected result for the Name");
+            Assert.AreEqual(expectedResult.DatabaseSource, actualResult.DatabaseSource, "Validate method returned unexpected result for the DatabaseSource");
+            Assert.AreEqual(expectedResult.InitialCatalog, actualResult.InitialCatalog, "Validate method returned unexpected result for the InitialCatalog");
+            Assert.AreEqual(expectedResult.IsUsingIntegratedSecurity, actualResult.IsUsingIntegratedSecurity, "Validate method returned unexpected result for the IsUsingIntegratedSecurity");
+        }
+
+        /// <summary>
+        /// public void When_ConnectionStrings_in_configuration_file_has_one_entry_and_WhiteList_has_two_values_Validate_Method_returns_the_distinct_values_for_the_one_entry
+        /// </summary>
+        [TestMethod]
+        public void When_ConnectionStrings_in_configuration_file_has_one_entry_and_WhiteList_has_two_values_Validate_Method_returns_the_distinct_values_for_the_one_entry()
+        {
+            // Arrange            
+            var expectedFakeConnectionStrings = new ConnectionStringSettingsCollection();
+            expectedFakeConnectionStrings.Add(new ConnectionStringSettings { Name = "TestName", ConnectionString = "Data Source=TestDataSource;Initial Catalog=TestInitialCatalog;integrated security=SSPI;" });
+            A.CallTo(() => _fakeCustomConfigurationManager.ConnectionStrings).Returns(expectedFakeConnectionStrings);
+
+            A.CallTo(() => _fakeCustomConfigurationManager.AppSettings.Get("WhiteListDataSourceItems")).Returns("Dummy,TestDataSource");
 
             var expectedResult = new POCO.DatabaseConnectionStringResult()
             {
