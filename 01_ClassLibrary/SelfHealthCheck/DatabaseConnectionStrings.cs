@@ -28,7 +28,7 @@
         /// Fetch the connection strings
         /// </summary>
         /// <returns></returns>
-        public ConnectionStringSettingsCollection FetchConnectionStrings()
+        public ConnectionStringSettingsCollection GetConnectionStrings()
         {
             var result = _customConfigurationManager.ConnectionStrings;
 
@@ -49,7 +49,7 @@
             // 2. Change Validate to return a JSON data structure and update the tests
             // 3. Create an ASP.NET MVC Controller that calls the Validate method and 
             //    returns the JSON data structure
-            var connectionStringSettings = FetchConnectionStrings();
+            var connectionStringSettings = GetConnectionStrings();
 
             if (connectionStringSettings.Count < 1)
             {

@@ -35,17 +35,17 @@
         #endregion
 
         /// <summary>
-        /// When_ConnectionStrings_in_configuration_file_is_empty_Fetch_Method_returns_empty_ConnectionStringSettingsCollection_result
+        /// When_ConnectionStrings_in_configuration_file_is_empty_GetConnectionStrings_Method_returns_empty_ConnectionStringSettingsCollection_result
         /// </summary>
         [TestMethod]
-        public void When_ConnectionStrings_in_configuration_file_is_empty_Fetch_Method_returns_empty_ConnectionStringSettingsCollection_result()
+        public void When_ConnectionStrings_in_configuration_file_is_empty_GetConnectionStrings_Method_returns_empty_ConnectionStringSettingsCollection_result()
         {
             // Arrange
             var expectedFakeConnectionStrings = new ConnectionStringSettingsCollection();
             A.CallTo(() => _fakeCustomConfigurationManager.ConnectionStrings).Returns(expectedFakeConnectionStrings);
 
             // Act
-            var actualConnectionStrings = _databaseConnectionStrings.FetchConnectionStrings();
+            var actualConnectionStrings = _databaseConnectionStrings.GetConnectionStrings();
 
             // Assert
             Assert.IsNotNull(actualConnectionStrings);
@@ -53,10 +53,10 @@
         }
 
         /// <summary>
-        /// When_ConnectionStrings_in_configuration_file_has_one_entry_Fetch_Method_returns_ConnectionStringSettingsCollection_result_with_one_result
+        /// When_ConnectionStrings_in_configuration_file_has_one_entry_GetConnectionStrings_Method_returns_ConnectionStringSettingsCollection_result_with_one_result
         /// </summary>
         [TestMethod]
-        public void When_ConnectionStrings_in_configuration_file_has_one_entry_Fetch_Method_returns_ConnectionStringSettingsCollection_result_with_one_result()
+        public void When_ConnectionStrings_in_configuration_file_has_one_entry_GetConnectionStrings_Method_returns_ConnectionStringSettingsCollection_result_with_one_result()
         {
             // Arrange            
             var expectedFakeConnectionStrings = new ConnectionStringSettingsCollection();
@@ -64,7 +64,7 @@
 
             // Act
             A.CallTo(() => _fakeCustomConfigurationManager.ConnectionStrings).Returns(expectedFakeConnectionStrings);
-            var actualConnectionStrings = _databaseConnectionStrings.FetchConnectionStrings();
+            var actualConnectionStrings = _databaseConnectionStrings.GetConnectionStrings();
 
             // Assert
             Assert.IsNotNull(actualConnectionStrings);

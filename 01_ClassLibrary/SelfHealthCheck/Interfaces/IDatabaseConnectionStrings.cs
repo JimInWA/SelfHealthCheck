@@ -13,7 +13,7 @@
         /// Fetch the connection strings
         /// </summary>
         /// <returns></returns>
-        ConnectionStringSettingsCollection FetchConnectionStrings();
+        ConnectionStringSettingsCollection GetConnectionStrings();
 
         /// <summary>
         /// Determines if the connection strings in the configuration file are valid
