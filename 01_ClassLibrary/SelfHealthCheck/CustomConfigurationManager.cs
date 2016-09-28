@@ -1,5 +1,6 @@
 ﻿namespace SelfHealthCheck
 {
+    using System.Collections.Specialized;
     using System.Configuration;
 
     /// <summary>
@@ -8,6 +9,17 @@
     /// </summary>
     public class CustomConfigurationManager : Interfaces.ICustomConfigurationManager
     {
+        /// <summary>
+        /// AppSettings used to get the appSettings from the configuration file
+        /// </summary>
+        public NameValueCollection AppSettings
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings;
+            }
+        }
+
         /// <summary>
         /// ConnectionStrings used to get the connectionStrings from the configuration file
         /// </summary>

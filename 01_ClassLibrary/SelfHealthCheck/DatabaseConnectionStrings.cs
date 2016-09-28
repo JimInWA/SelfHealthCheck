@@ -28,7 +28,7 @@
         /// Fetch the connection strings
         /// </summary>
         /// <returns></returns>
-        public ConnectionStringSettingsCollection Fetch()
+        public ConnectionStringSettingsCollection FetchConnectionStrings()
         {
             var result = _customConfigurationManager.ConnectionStrings;
 
@@ -45,17 +45,45 @@
 
             // TODOs:
             // 1. Determine how to represent a list of results along with an error message
-            // 2. Introduce the WhiteList appSettings keys (and the ability to fake/stub
-            //    those keys)
-            var connectionStringSettings = Fetch();
+            //    and update the tests
+            // 2. Change Validate to return a JSON data structure and update the tests
+            // 3. Create an ASP.NET MVC Controller that calls the Validate method and 
+            //    returns the JSON data structure
+            var connectionStringSettings = FetchConnectionStrings();
 
             if (connectionStringSettings.Count < 1)
             {
-                result.Name = "Either no configuration file exists or no connectionString entry exists";
+                result.Name = "Either no configuration file exists or no connectionString section exists";
+                return result;
+            }
+
+            var whiteListDataSourceItemsRaw = _customConfigurationManager.AppSettings.Get("WhiteListDataSourceItems");
+            string[] whiteListDataSourceItems = (whiteListDataSourceItemsRaw == null) ? new string[0] : whiteListDataSourceItemsRaw.Split(';');
+
+            if (whiteListDataSourceItems.Length == 0)
+            {
+                result.Name = "Either no configuration file exists or not appSettings section exists or the WhiteListDataSourceItems appSettings key doesn't exist";
                 return result;
             }
 
             result = BreakConnectionStringIntoSeparateValues(connectionStringSettings);
+
+            var itemFound = false;
+            foreach(string individualItem in whiteListDataSourceItems)
+            {
+                // case sensitive matching
+                if (result.DatabaseSource == individualItem)
+                {
+                    itemFound = true;
+                    break;
+                }
+            }
+
+            if (!itemFound)
+            {
+                result.Name = "The record was found but didn't match the white list";
+                return result;
+            }
 
             return result;
         }

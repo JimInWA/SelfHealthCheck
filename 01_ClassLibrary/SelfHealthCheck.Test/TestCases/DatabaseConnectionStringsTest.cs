@@ -45,7 +45,7 @@
             A.CallTo(() => _fakeCustomConfigurationManager.ConnectionStrings).Returns(expectedFakeConnectionStrings);
 
             // Act
-            var actualConnectionStrings = _databaseConnectionStrings.Fetch();
+            var actualConnectionStrings = _databaseConnectionStrings.FetchConnectionStrings();
 
             // Assert
             Assert.IsNotNull(actualConnectionStrings);
@@ -60,11 +60,11 @@
         {
             // Arrange            
             var expectedFakeConnectionStrings = new ConnectionStringSettingsCollection();
-            expectedFakeConnectionStrings.Add(new ConnectionStringSettings{ Name = "test", ConnectionString = "Data Source=TestDS;Initial Catalog=TestCatalog;integrated security=SSPI;" });
+            expectedFakeConnectionStrings.Add(new ConnectionStringSettings{ Name = "TestName", ConnectionString = "Data Source=TestDataSource;Initial Catalog=TestInitialCatalog;integrated security=SSPI;" });
 
             // Act
             A.CallTo(() => _fakeCustomConfigurationManager.ConnectionStrings).Returns(expectedFakeConnectionStrings);
-            var actualConnectionStrings = _databaseConnectionStrings.Fetch();
+            var actualConnectionStrings = _databaseConnectionStrings.FetchConnectionStrings();
 
             // Assert
             Assert.IsNotNull(actualConnectionStrings);
@@ -81,8 +81,10 @@
             var expectedFakeConnectionStrings = new ConnectionStringSettingsCollection();
             A.CallTo(() => _fakeCustomConfigurationManager.ConnectionStrings).Returns(expectedFakeConnectionStrings);
 
-            var expectedResult = new POCO.DatabaseConnectionStringResult();
-            expectedResult.Name = "Either no configuration file exists or no connectionString entry exists";
+            var expectedResult = new POCO.DatabaseConnectionStringResult()
+            {
+                Name = "Either no configuration file exists or no connectionString section exists"
+            };
 
             // Act
             var actualResult = _databaseConnectionStrings.Validate();
@@ -93,21 +95,75 @@
         }
 
         /// <summary>
-        /// When_ConnectionStrings_in_configuration_file_has_one_entry_Validate_Method_returns_the_distinct_values_for_the_one_entry(
+        /// When_ConnectionStrings_in_configuration_file_has_one_entry_Validate_Method_but_WhiteListDataSourceItems_is_missing__returns_error_condition
+        /// </summary>
+        [TestMethod]
+        public void When_ConnectionStrings_in_configuration_file_has_one_entry_Validate_Method_but_WhiteListDataSourceItems_is_missing__returns_error_condition()
+        {
+            // Arrange            
+            var expectedFakeConnectionStrings = new ConnectionStringSettingsCollection();
+            expectedFakeConnectionStrings.Add(new ConnectionStringSettings { Name = "TestName", ConnectionString = "Data Source=TestDataSource;Initial Catalog=TestInitialCatalog;integrated security=SSPI;" });
+            A.CallTo(() => _fakeCustomConfigurationManager.ConnectionStrings).Returns(expectedFakeConnectionStrings);
+
+            A.CallTo(() => _fakeCustomConfigurationManager.AppSettings.Get("WhiteListDataSourceItems")).Returns(null);
+
+            var expectedResult = new POCO.DatabaseConnectionStringResult()
+            {
+                Name = "Either no configuration file exists or not appSettings section exists or the WhiteListDataSourceItems appSettings key doesn't exist"
+            };
+
+            // Act
+            var actualResult = _databaseConnectionStrings.Validate();
+
+            // Assert
+            Assert.IsNotNull(actualResult);
+            Assert.AreEqual(expectedResult.Name, actualResult.Name, "Validate method returned unexpected result");
+        }
+
+        /// <summary>
+        /// When_ConnectionStrings_in_configuration_file_has_one_entry_Validate_Method_but_WhiteListDataSourceItems_has_one_item_that_does_not_match_the_datasource_entry_returns_error_condition
+        /// </summary>
+        [TestMethod]
+        public void When_ConnectionStrings_in_configuration_file_has_one_entry_Validate_Method_but_WhiteListDataSourceItems_has_one_item_that_does_not_match_the_datasource_entry_returns_error_condition()
+        {
+            // Arrange            
+            var expectedFakeConnectionStrings = new ConnectionStringSettingsCollection();
+            expectedFakeConnectionStrings.Add(new ConnectionStringSettings { Name = "TestName", ConnectionString = "Data Source=TestDataSource;Initial Catalog=TestInitialCatalog;integrated security=SSPI;" });
+            A.CallTo(() => _fakeCustomConfigurationManager.ConnectionStrings).Returns(expectedFakeConnectionStrings);
+
+            A.CallTo(() => _fakeCustomConfigurationManager.AppSettings.Get("WhiteListDataSourceItems")).Returns("Test");
+
+            var expectedResult = new POCO.DatabaseConnectionStringResult()
+            {
+                Name = "The record was found but didn't match the white list"
+            };
+
+            // Act
+            var actualResult = _databaseConnectionStrings.Validate();
+
+            // Assert
+            Assert.IsNotNull(actualResult);
+            Assert.AreEqual(expectedResult.Name, actualResult.Name, "Validate method returned unexpected result");
+        }
+
+        /// <summary>
+        /// When_ConnectionStrings_in_configuration_file_has_one_entry_Validate_Method_and_WhiteListDataSourceItems_has_one_item_returns_the_distinct_values_for_the_one_entry(
         /// </summary>
         [TestMethod]
         public void When_ConnectionStrings_in_configuration_file_has_one_entry_Validate_Method_returns_the_distinct_values_for_the_one_entry()
         {
             // Arrange            
             var expectedFakeConnectionStrings = new ConnectionStringSettingsCollection();
-            expectedFakeConnectionStrings.Add(new ConnectionStringSettings { Name = "test", ConnectionString = "Data Source=TestDS;Initial Catalog=TestCatalog;integrated security=SSPI;" });
+            expectedFakeConnectionStrings.Add(new ConnectionStringSettings { Name = "TestName", ConnectionString = "Data Source=TestDataSource;Initial Catalog=TestInitialCatalog;integrated security=SSPI;" });
             A.CallTo(() => _fakeCustomConfigurationManager.ConnectionStrings).Returns(expectedFakeConnectionStrings);
+
+            A.CallTo(() => _fakeCustomConfigurationManager.AppSettings.Get("WhiteListDataSourceItems")).Returns("TestDataSource");
 
             var expectedResult = new POCO.DatabaseConnectionStringResult()
             {
-                Name = "test",
-                DatabaseSource = "TestDS",
-                InitialCatalog = "TestCatalog",
+                Name = "TestName",
+                DatabaseSource = "TestDataSource",
+                InitialCatalog = "TestInitialCatalog",
                 IsUsingIntegratedSecurity = true
             };
 
