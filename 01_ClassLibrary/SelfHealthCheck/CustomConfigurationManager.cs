@@ -1,7 +1,10 @@
 ﻿namespace SelfHealthCheck
 {
+    using System;
+    using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.Configuration;
+    using System.Linq;
 
     /// <summary>
     /// CustomConfigurationManager manager gives you the properties for items
@@ -10,7 +13,7 @@
     public class CustomConfigurationManager : Interfaces.ICustomConfigurationManager
     {
         /// <summary>
-        /// AppSettings used to get the appSettings from the configuration file
+        /// AppSettings used to get the AppSettings key where the value is an actual string that doesn't need to be converted to something else
         /// </summary>
         public NameValueCollection AppSettings
         {
@@ -28,6 +31,56 @@
             get
             {
                 return ConfigurationManager.ConnectionStrings;
+            }
+        }
+
+        /// <summary>
+        /// TryGetValueCollectionByKey used to AppSettings keys where the values represent collections (lists)
+        /// </summary>
+        /// <param name="key"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public IEnumerable<T> TryGetValueCollectionByKey<T>(string key)
+        {
+            var valueAsString = ConfigurationManager.AppSettings[key];
+
+            try
+            {
+                if (valueAsString == null)
+                {
+                    throw new SettingsPropertyNotFoundException(string.Format("AppSettings key [{0}] not found", key));
+                }
+
+                return valueAsString.Split(',').Select(s => (T)Convert.ChangeType(s.Trim(), typeof(T)));
+            }
+            catch (Exception)
+            {
+                return Enumerable.Empty<T>();
+            }
+        }
+
+        /// <summary>
+        /// TryGetValueByKey used to get AppSettings keys where the values are being converted from the stored string to some other data type
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public T TryGetValueByKey<T>(string key)
+        {
+            var valueAsString = ConfigurationManager.AppSettings[key];
+
+            try
+            {
+                if (valueAsString == null)
+                {
+                    throw new SettingsPropertyNotFoundException(string.Format("AppSettings key [{0}] not found", key));
+                }
+
+                return (T)Convert.ChangeType(valueAsString.Trim(), typeof(T));
+            }
+            catch (Exception)
+            {
+                return default(T);
             }
         }
     }

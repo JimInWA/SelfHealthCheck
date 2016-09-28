@@ -36,6 +36,18 @@
         }
 
         /// <summary>
+        /// Get the WhiteListDataSourceItems
+        /// </summary>
+        /// <returns></returns>
+        public string[] GetWhiteListDataSourceItems()
+        {
+            var whiteListDataSourceItemsRaw = _customConfigurationManager.AppSettings.Get("WhiteListDataSourceItems");
+            string[] result = (whiteListDataSourceItemsRaw == null) ? new string[0] : whiteListDataSourceItemsRaw.Split(';');
+
+            return result;
+        }
+
+        /// <summary>
         /// Determines if the connection strings in the configuration file are valid
         /// </summary>
         /// <returns></returns>
@@ -57,8 +69,7 @@
                 return result;
             }
 
-            var whiteListDataSourceItemsRaw = _customConfigurationManager.AppSettings.Get("WhiteListDataSourceItems");
-            string[] whiteListDataSourceItems = (whiteListDataSourceItemsRaw == null) ? new string[0] : whiteListDataSourceItemsRaw.Split(';');
+            var whiteListDataSourceItems = GetWhiteListDataSourceItems();
 
             if (whiteListDataSourceItems.Length == 0)
             {

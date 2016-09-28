@@ -10,10 +10,16 @@
     public interface IDatabaseConnectionStrings
     {
         /// <summary>
-        /// Fetch the connection strings
+        /// Get the connection strings
         /// </summary>
         /// <returns></returns>
         ConnectionStringSettingsCollection GetConnectionStrings();
+
+        /// <summary>
+        /// Get the WhiteListDataSourceItems
+        /// </summary>
+        /// <returns></returns>
+        string[] GetWhiteListDataSourceItems();
 
         /// <summary>
         /// Determines if the connection strings in the configuration file are valid
