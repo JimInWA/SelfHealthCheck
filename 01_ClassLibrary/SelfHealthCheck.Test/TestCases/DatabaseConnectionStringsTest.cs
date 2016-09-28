@@ -155,6 +155,41 @@
         }
 
         /// <summary>
+        /// When_ConnectionStrings_in_configuration_file_has_one_entry_Validate_Method_but_WhiteListDataSourceItems_has_one_item_matches_the_spelling_but_not_the_capitalization_of_datasource_entry_returns_error_condition
+        /// </summary>
+        [TestMethod]
+        public void When_ConnectionStrings_in_configuration_file_has_one_entry_Validate_Method_but_WhiteListDataSourceItems_has_one_item_matches_the_spelling_but_not_the_capitalization_of_datasource_entry_returns_error_condition()
+        {
+            // Arrange            
+            var expectedFakeConnectionStrings = new ConnectionStringSettingsCollection();
+            expectedFakeConnectionStrings.Add(new ConnectionStringSettings { Name = "TestName", ConnectionString = "Data Source=TestDataSource;Initial Catalog=TestInitialCatalog;integrated security=SSPI;" });
+            A.CallTo(() => _fakeCustomConfigurationManager.ConnectionStrings).Returns(expectedFakeConnectionStrings);
+
+            // the white list value is in all lower case, not the mixed case of the connection string value
+            A.CallTo(() => _fakeCustomConfigurationManager.AppSettings.Get("WhiteListDataSourceItems")).Returns("testdatasource"); 
+
+            var expectedResult = new POCO.DatabaseConnectionStringResult()
+            {
+                Name = "TestName",
+                DatabaseSource = "TestDataSource",
+                InitialCatalog = "TestInitialCatalog",
+                IsUsingIntegratedSecurity = true,
+                IsInWhiteList = false
+            };
+
+            // Act
+            var actualResult = _databaseConnectionStrings.Validate();
+
+            // Assert
+            Assert.IsNotNull(actualResult);
+            Assert.AreEqual(expectedResult.Name, actualResult.Name, "Validate method returned unexpected result");
+            Assert.AreEqual(expectedResult.DatabaseSource, actualResult.DatabaseSource, "Validate method returned unexpected result for the DatabaseSource");
+            Assert.AreEqual(expectedResult.InitialCatalog, actualResult.InitialCatalog, "Validate method returned unexpected result for the InitialCatalog");
+            Assert.AreEqual(expectedResult.IsUsingIntegratedSecurity, actualResult.IsUsingIntegratedSecurity, "Validate method returned unexpected result for the IsUsingIntegratedSecurity");
+            Assert.AreEqual(expectedResult.IsInWhiteList, actualResult.IsInWhiteList, "Validate method returned unexpected result for the IsInWhiteList");
+        }
+
+        /// <summary>
         /// public void When_ConnectionStrings_in_configuration_file_has_one_entry_and_WhiteList_has_one_value_Validate_Method_returns_the_distinct_values_for_the_one_entry
         /// </summary>
         [TestMethod]
