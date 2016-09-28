@@ -135,7 +135,11 @@
 
             var expectedResult = new POCO.DatabaseConnectionStringResult()
             {
-                Name = "The record was found but didn't match the white list"
+                Name = "TestName",
+                DatabaseSource = "TestDataSource",
+                InitialCatalog = "TestInitialCatalog",
+                IsUsingIntegratedSecurity = true,
+                IsInWhiteList = false
             };
 
             // Act
@@ -144,6 +148,10 @@
             // Assert
             Assert.IsNotNull(actualResult);
             Assert.AreEqual(expectedResult.Name, actualResult.Name, "Validate method returned unexpected result");
+            Assert.AreEqual(expectedResult.DatabaseSource, actualResult.DatabaseSource, "Validate method returned unexpected result for the DatabaseSource");
+            Assert.AreEqual(expectedResult.InitialCatalog, actualResult.InitialCatalog, "Validate method returned unexpected result for the InitialCatalog");
+            Assert.AreEqual(expectedResult.IsUsingIntegratedSecurity, actualResult.IsUsingIntegratedSecurity, "Validate method returned unexpected result for the IsUsingIntegratedSecurity");
+            Assert.AreEqual(expectedResult.IsInWhiteList, actualResult.IsInWhiteList, "Validate method returned unexpected result for the IsInWhiteList");
         }
 
         /// <summary>
@@ -164,7 +172,8 @@
                 Name = "TestName",
                 DatabaseSource = "TestDataSource",
                 InitialCatalog = "TestInitialCatalog",
-                IsUsingIntegratedSecurity = true
+                IsUsingIntegratedSecurity = true,
+                IsInWhiteList = true
             };
 
             // Act
@@ -176,6 +185,7 @@
             Assert.AreEqual(expectedResult.DatabaseSource, actualResult.DatabaseSource, "Validate method returned unexpected result for the DatabaseSource");
             Assert.AreEqual(expectedResult.InitialCatalog, actualResult.InitialCatalog, "Validate method returned unexpected result for the InitialCatalog");
             Assert.AreEqual(expectedResult.IsUsingIntegratedSecurity, actualResult.IsUsingIntegratedSecurity, "Validate method returned unexpected result for the IsUsingIntegratedSecurity");
+            Assert.AreEqual(expectedResult.IsInWhiteList, actualResult.IsInWhiteList, "Validate method returned unexpected result for the IsInWhiteList");
         }
 
         /// <summary>
@@ -196,7 +206,8 @@
                 Name = "TestName",
                 DatabaseSource = "TestDataSource",
                 InitialCatalog = "TestInitialCatalog",
-                IsUsingIntegratedSecurity = true
+                IsUsingIntegratedSecurity = true,
+                IsInWhiteList = true
             };
 
             // Act
@@ -208,6 +219,7 @@
             Assert.AreEqual(expectedResult.DatabaseSource, actualResult.DatabaseSource, "Validate method returned unexpected result for the DatabaseSource");
             Assert.AreEqual(expectedResult.InitialCatalog, actualResult.InitialCatalog, "Validate method returned unexpected result for the InitialCatalog");
             Assert.AreEqual(expectedResult.IsUsingIntegratedSecurity, actualResult.IsUsingIntegratedSecurity, "Validate method returned unexpected result for the IsUsingIntegratedSecurity");
+            Assert.AreEqual(expectedResult.IsInWhiteList, actualResult.IsInWhiteList, "Validate method returned unexpected result for the IsInWhiteList");
         }
     }
 }

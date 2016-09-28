@@ -79,11 +79,10 @@
 
             result = BreakConnectionStringIntoSeparateValues(connectionStringSettings);
 
-            var isDataSourceInWhiteList = IsDataSourceInWhiteList(result, whiteListDataSourceItems);
+            result.IsInWhiteList = IsDataSourceInWhiteList(result, whiteListDataSourceItems);
 
-            if (!isDataSourceInWhiteList)
+            if (!result.IsInWhiteList)
             {
-                result.Name = "The record was found but didn't match the white list";
                 return result;
             }
 

@@ -21,8 +21,13 @@
         public string InitialCatalog { get; set; }
 
         /// <summary>
-        /// ConnectionString (part of the connectionString attribute) 
+        /// ConnectionString IsUsingIntegratedSecurity (part of the connectionString attribute) 
         /// </summary>
         public bool IsUsingIntegratedSecurity { get; set; }
+
+        /// <summary>
+        /// Is this connection string in the WhiteList?
+        /// </summary>
+        public bool IsInWhiteList { get; set; }
     }
 }
