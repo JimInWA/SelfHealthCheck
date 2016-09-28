@@ -79,18 +79,9 @@
 
             result = BreakConnectionStringIntoSeparateValues(connectionStringSettings);
 
-            var itemFound = false;
-            foreach(string individualItem in whiteListDataSourceItems)
-            {
-                // case sensitive matching
-                if (result.DatabaseSource == individualItem)
-                {
-                    itemFound = true;
-                    break;
-                }
-            }
+            var isDataSourceInWhiteList = IsDataSourceInWhiteList(result, whiteListDataSourceItems);
 
-            if (!itemFound)
+            if (!isDataSourceInWhiteList)
             {
                 result.Name = "The record was found but didn't match the white list";
                 return result;
@@ -137,6 +128,22 @@
             }
 
             return result;
+        }
+
+        private bool IsDataSourceInWhiteList(POCO.DatabaseConnectionStringResult result, string[] whiteListDataSourceItems)
+        {
+            var isDataSourceInWhiteList = false;
+            foreach (string individualItem in whiteListDataSourceItems)
+            {
+                // case sensitive matching
+                if (result.DatabaseSource == individualItem)
+                {
+                    isDataSourceInWhiteList = true;
+                    break;
+                }
+            }
+
+            return isDataSourceInWhiteList;
         }
     }
 }
