@@ -78,7 +78,12 @@
 
             result = BreakConnectionStringIntoSeparateValues(connectionStringSettings, whiteListDataSourceItems);
 
-            foreach(POCO.DatabaseConnectionStringItem individualItem in result.ItemFromConfigurationFile)
+            foreach (string individualItem in whiteListDataSourceItems)
+            {
+                result.WhiteListDatabaseConnectionString.Add(individualItem);
+            }
+
+            foreach (POCO.DatabaseConnectionStringItem individualItem in result.ItemFromConfigurationFile)
             {
                 if (!individualItem.IsInWhiteList)
                 {

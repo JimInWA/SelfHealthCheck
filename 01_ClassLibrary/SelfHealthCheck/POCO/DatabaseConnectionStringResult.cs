@@ -16,6 +16,7 @@
         {
             ItemFromConfigurationFile = new Collection<DatabaseConnectionStringItem>();
             ErrorMessageInformation = new Collection<string>();
+            WhiteListDatabaseConnectionString = new Collection<string>();
         }
 
         /// <summary>
@@ -27,5 +28,10 @@
         /// ErrorMessageInformation
         /// </summary>
         public ICollection<string> ErrorMessageInformation { get; set; }
+
+        /// <summary>
+        /// WhiteListDatabaseConnectionString
+        /// </summary>
+        public ICollection<string> WhiteListDatabaseConnectionString { get; set; }
     }
 }
