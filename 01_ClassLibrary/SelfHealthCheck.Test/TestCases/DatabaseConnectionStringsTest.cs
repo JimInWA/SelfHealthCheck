@@ -82,12 +82,8 @@
             var expectedFakeConnectionStrings = new ConnectionStringSettingsCollection();
             A.CallTo(() => _fakeCustomConfigurationManager.ConnectionStrings).Returns(expectedFakeConnectionStrings);
 
-            var item = new POCO.DatabaseConnectionStringItem()
-            {
-                Name = "Either no configuration file exists or no connectionString section exists"
-            };
             var expectedResult = new POCO.DatabaseConnectionStringResult();
-            expectedResult.ItemFromConfigurationFile.Add(item);
+            expectedResult.ErrorMessageInformation.Add("Either no configuration file exists or no connectionString section exists");
 
             // Act
             var actualResult = _databaseConnectionStrings.Validate();
@@ -95,8 +91,10 @@
             // Assert
             Assert.IsNotNull(actualResult);
             Assert.IsNotNull(actualResult.ItemFromConfigurationFile);
-            Assert.AreEqual(1, actualResult.ItemFromConfigurationFile.Count);
-            Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().Name, actualResult.ItemFromConfigurationFile.First().Name, "Validate method returned unexpected result for the Name");
+            Assert.AreEqual(0, actualResult.ItemFromConfigurationFile.Count);
+            Assert.IsNotNull(actualResult.ErrorMessageInformation);
+            Assert.AreEqual(1, actualResult.ErrorMessageInformation.Count);
+            Assert.AreEqual(expectedResult.ErrorMessageInformation.First(), actualResult.ErrorMessageInformation.First(), "Validate method returned unexpected result for the ErrorMessageInformation");
         }
 
         /// <summary>
@@ -112,12 +110,8 @@
 
             A.CallTo(() => _fakeCustomConfigurationManager.AppSettings.Get("WhiteListDataSourceItems")).Returns(null);
 
-            var item = new POCO.DatabaseConnectionStringItem()
-            {
-                Name = "Either no configuration file exists or not appSettings section exists or the WhiteListDataSourceItems appSettings key doesn't exist"
-            };
             var expectedResult = new POCO.DatabaseConnectionStringResult();
-            expectedResult.ItemFromConfigurationFile.Add(item);
+            expectedResult.ErrorMessageInformation.Add("Either no configuration file exists or not appSettings section exists or the WhiteListDataSourceItems appSettings key doesn't exist");
 
             // Act
             var actualResult = _databaseConnectionStrings.Validate();
@@ -125,8 +119,10 @@
             // Assert
             Assert.IsNotNull(actualResult);
             Assert.IsNotNull(actualResult.ItemFromConfigurationFile);
-            Assert.AreEqual(1, actualResult.ItemFromConfigurationFile.Count);
-            Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().Name, actualResult.ItemFromConfigurationFile.First().Name, "Validate method returned unexpected result for the Name");
+            Assert.AreEqual(0, actualResult.ItemFromConfigurationFile.Count);
+            Assert.IsNotNull(actualResult.ErrorMessageInformation);
+            Assert.AreEqual(1, actualResult.ErrorMessageInformation.Count);
+            Assert.AreEqual(expectedResult.ErrorMessageInformation.First(), actualResult.ErrorMessageInformation.First(), "Validate method returned unexpected result for the ErrorMessageInformation");
         }
 
         /// <summary>
@@ -152,6 +148,7 @@
             };
             var expectedResult = new POCO.DatabaseConnectionStringResult();
             expectedResult.ItemFromConfigurationFile.Add(item);
+            expectedResult.ErrorMessageInformation.Add("Name TestName, DataSource TestDataSource is not in the whitelist");
 
             // Act
             var actualResult = _databaseConnectionStrings.Validate();
@@ -165,6 +162,10 @@
             Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().InitialCatalog, actualResult.ItemFromConfigurationFile.First().InitialCatalog, "Validate method returned unexpected result for the InitialCatalog");
             Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().IsUsingIntegratedSecurity, actualResult.ItemFromConfigurationFile.First().IsUsingIntegratedSecurity, "Validate method returned unexpected result for the IsUsingIntegratedSecurity");
             Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().IsInWhiteList, actualResult.ItemFromConfigurationFile.First().IsInWhiteList, "Validate method returned unexpected result for the IsInWhiteList");
+            Assert.IsNotNull(actualResult.ErrorMessageInformation);
+            Assert.IsNotNull(actualResult.ErrorMessageInformation);
+            Assert.AreEqual(1, actualResult.ErrorMessageInformation.Count);
+            Assert.AreEqual(expectedResult.ErrorMessageInformation.First(), actualResult.ErrorMessageInformation.First(), "Validate method returned unexpected result for the ErrorMessageInformation");
         }
 
         /// <summary>
@@ -191,6 +192,7 @@
             };
             var expectedResult = new POCO.DatabaseConnectionStringResult();
             expectedResult.ItemFromConfigurationFile.Add(item);
+            expectedResult.ErrorMessageInformation.Add("Name TestName, DataSource TestDataSource is not in the whitelist");
 
             // Act
             var actualResult = _databaseConnectionStrings.Validate();
@@ -204,6 +206,10 @@
             Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().InitialCatalog, actualResult.ItemFromConfigurationFile.First().InitialCatalog, "Validate method returned unexpected result for the InitialCatalog");
             Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().IsUsingIntegratedSecurity, actualResult.ItemFromConfigurationFile.First().IsUsingIntegratedSecurity, "Validate method returned unexpected result for the IsUsingIntegratedSecurity");
             Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().IsInWhiteList, actualResult.ItemFromConfigurationFile.First().IsInWhiteList, "Validate method returned unexpected result for the IsInWhiteList");
+            Assert.IsNotNull(actualResult.ErrorMessageInformation);
+            Assert.IsNotNull(actualResult.ErrorMessageInformation);
+            Assert.AreEqual(1, actualResult.ErrorMessageInformation.Count);
+            Assert.AreEqual(expectedResult.ErrorMessageInformation.First(), actualResult.ErrorMessageInformation.First(), "Validate method returned unexpected result for the ErrorMessageInformation");
         }
 
         /// <summary>
@@ -242,6 +248,8 @@
             Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().InitialCatalog, actualResult.ItemFromConfigurationFile.First().InitialCatalog, "Validate method returned unexpected result for the InitialCatalog");
             Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().IsUsingIntegratedSecurity, actualResult.ItemFromConfigurationFile.First().IsUsingIntegratedSecurity, "Validate method returned unexpected result for the IsUsingIntegratedSecurity");
             Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().IsInWhiteList, actualResult.ItemFromConfigurationFile.First().IsInWhiteList, "Validate method returned unexpected result for the IsInWhiteList");
+            Assert.IsNotNull(actualResult.ErrorMessageInformation);
+            Assert.AreEqual(0, actualResult.ErrorMessageInformation.Count);
         }
 
         /// <summary>
@@ -280,6 +288,8 @@
             Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().InitialCatalog, actualResult.ItemFromConfigurationFile.First().InitialCatalog, "Validate method returned unexpected result for the InitialCatalog");
             Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().IsUsingIntegratedSecurity, actualResult.ItemFromConfigurationFile.First().IsUsingIntegratedSecurity, "Validate method returned unexpected result for the IsUsingIntegratedSecurity");
             Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().IsInWhiteList, actualResult.ItemFromConfigurationFile.First().IsInWhiteList, "Validate method returned unexpected result for the IsInWhiteList");
+            Assert.IsNotNull(actualResult.ErrorMessageInformation);
+            Assert.AreEqual(0, actualResult.ErrorMessageInformation.Count);
         }
 
         /// <summary>
@@ -316,6 +326,7 @@
                 IsInWhiteList = false
             };
             expectedResult.ItemFromConfigurationFile.Add(item);
+            expectedResult.ErrorMessageInformation.Add("Name TestName2, DataSource TestDataSource2 is not in the whitelist");
 
             // Act
             var actualResult = _databaseConnectionStrings.Validate();
@@ -334,6 +345,9 @@
             Assert.AreEqual(expectedResult.ItemFromConfigurationFile.ElementAt(1).InitialCatalog, actualResult.ItemFromConfigurationFile.ElementAt(1).InitialCatalog, "Validate method returned unexpected result for the InitialCatalog");
             Assert.AreEqual(expectedResult.ItemFromConfigurationFile.ElementAt(1).IsUsingIntegratedSecurity, actualResult.ItemFromConfigurationFile.ElementAt(1).IsUsingIntegratedSecurity, "Validate method returned unexpected result for the IsUsingIntegratedSecurity");
             Assert.AreEqual(expectedResult.ItemFromConfigurationFile.ElementAt(1).IsInWhiteList, actualResult.ItemFromConfigurationFile.ElementAt(1).IsInWhiteList, "Validate method returned unexpected result for the IsInWhiteList");
+            Assert.IsNotNull(actualResult.ErrorMessageInformation);
+            Assert.AreEqual(1, actualResult.ErrorMessageInformation.Count);
+            Assert.AreEqual(expectedResult.ErrorMessageInformation.First(), actualResult.ErrorMessageInformation.First(), "Validate method returned unexpected result for the ErrorMessageInformation");
         }
     }
 }

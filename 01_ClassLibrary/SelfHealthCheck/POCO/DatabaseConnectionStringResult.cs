@@ -15,11 +15,17 @@
         public DatabaseConnectionStringResult()
         {
             ItemFromConfigurationFile = new Collection<DatabaseConnectionStringItem>();
+            ErrorMessageInformation = new Collection<string>();
         }
 
         /// <summary>
         /// ItemFromConfigurationFile 
         /// </summary>
         public ICollection<DatabaseConnectionStringItem> ItemFromConfigurationFile { get; set; }
+
+        /// <summary>
+        /// ErrorMessageInformation
+        /// </summary>
+        public ICollection<string> ErrorMessageInformation { get; set; }
     }
 }

@@ -57,17 +57,14 @@
             var item = new POCO.DatabaseConnectionStringItem();
 
             // TODOs:
-            // 1. Determine how to represent a list of results along with an error message
-            //    and update the tests
-            // 2. Change Validate to return a JSON data structure and update the tests
-            // 3. Create an ASP.NET MVC Controller that calls the Validate method and 
+            // 1. Change Validate to return a JSON data structure and update the tests
+            // 2. Create an ASP.NET MVC Controller that calls the Validate method and 
             //    returns the JSON data structure
             var connectionStringSettings = GetConnectionStrings();
 
             if (connectionStringSettings.Count < 1)
             {
-                item.Name = "Either no configuration file exists or no connectionString section exists";
-                result.ItemFromConfigurationFile.Add(item);
+                result.ErrorMessageInformation.Add("Either no configuration file exists or no connectionString section exists");
                 return result;
             }
 
@@ -75,12 +72,20 @@
 
             if (whiteListDataSourceItems.Length == 0)
             {
-                item.Name = "Either no configuration file exists or not appSettings section exists or the WhiteListDataSourceItems appSettings key doesn't exist";
-                result.ItemFromConfigurationFile.Add(item);
+                result.ErrorMessageInformation.Add("Either no configuration file exists or not appSettings section exists or the WhiteListDataSourceItems appSettings key doesn't exist");
                 return result;
             }
 
             result = BreakConnectionStringIntoSeparateValues(connectionStringSettings, whiteListDataSourceItems);
+
+            foreach(POCO.DatabaseConnectionStringItem individualItem in result.ItemFromConfigurationFile)
+            {
+                if (!individualItem.IsInWhiteList)
+                {
+                    result.ErrorMessageInformation.Add(string.Format("Name {0}, DataSource {1} is not in the whitelist", individualItem.Name, individualItem.DatabaseSource));
+                }
+            }
+
             return result;
         }
 
