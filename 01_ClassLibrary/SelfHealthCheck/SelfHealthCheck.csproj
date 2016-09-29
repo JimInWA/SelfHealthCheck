@@ -49,6 +49,7 @@
     <Compile Include="Interfaces\ICustomConfigurationManager.cs" />
     <Compile Include="Interfaces\IDatabaseConnectionStrings.cs" />
     <Compile Include="POCO\DatabaseConnectionStringItem.cs" />
+    <Compile Include="POCO\DatabaseConnectionStringResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

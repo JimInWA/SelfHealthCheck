@@ -51,9 +51,10 @@
         /// Determines if the connection strings in the configuration file are valid
         /// </summary>
         /// <returns></returns>
-        public POCO.DatabaseConnectionStringItem Validate()
+        public POCO.DatabaseConnectionStringResult Validate()
         {
-            var result = new POCO.DatabaseConnectionStringItem();
+            var result = new POCO.DatabaseConnectionStringResult();
+            var item = new POCO.DatabaseConnectionStringItem();
 
             // TODOs:
             // 1. Determine how to represent a list of results along with an error message
@@ -65,7 +66,8 @@
 
             if (connectionStringSettings.Count < 1)
             {
-                result.Name = "Either no configuration file exists or no connectionString section exists";
+                item.Name = "Either no configuration file exists or no connectionString section exists";
+                result.ItemFromConfigurationFile.Add(item);
                 return result;
             }
 
@@ -73,32 +75,27 @@
 
             if (whiteListDataSourceItems.Length == 0)
             {
-                result.Name = "Either no configuration file exists or not appSettings section exists or the WhiteListDataSourceItems appSettings key doesn't exist";
+                item.Name = "Either no configuration file exists or not appSettings section exists or the WhiteListDataSourceItems appSettings key doesn't exist";
+                result.ItemFromConfigurationFile.Add(item);
                 return result;
             }
 
-            result = BreakConnectionStringIntoSeparateValues(connectionStringSettings);
-
-            result.IsInWhiteList = IsDataSourceInWhiteList(result, whiteListDataSourceItems);
-
-            if (!result.IsInWhiteList)
-            {
-                return result;
-            }
-
+            result = BreakConnectionStringIntoSeparateValues(connectionStringSettings, whiteListDataSourceItems);
             return result;
         }
 
-        private POCO.DatabaseConnectionStringItem BreakConnectionStringIntoSeparateValues(ConnectionStringSettingsCollection connectionStringSettings)
+        private POCO.DatabaseConnectionStringResult BreakConnectionStringIntoSeparateValues(ConnectionStringSettingsCollection connectionStringSettings, string[] whiteListDataSourceItems)
         {
-            var result = new POCO.DatabaseConnectionStringItem();
+            var result = new POCO.DatabaseConnectionStringResult();
+            POCO.DatabaseConnectionStringItem item = null;
 
             var dataSourceSearchString = "Data Source=";
             var initialCatalogSearchString = "Initial Catalog=";
             var integratedSecuritySearchString = "integrated security=";
             for (int i = 0; i < connectionStringSettings.Count; i++)
             {
-                result.Name = connectionStringSettings[i].Name;
+                item = new POCO.DatabaseConnectionStringItem();
+                item.Name = connectionStringSettings[i].Name;
                 string[] connectionStringItems = connectionStringSettings[i].ConnectionString.Split(';');
 
                 var dataSourceFound = false;
@@ -112,18 +109,22 @@
 
                         if ((!dataSourceFound) && (localIndividualItem.StartsWith(dataSourceSearchString)))
                         {
-                            result.DatabaseSource = localIndividualItem.Substring(dataSourceSearchString.Length, localIndividualItem.Length - dataSourceSearchString.Length).Trim();
+                            item.DatabaseSource = localIndividualItem.Substring(dataSourceSearchString.Length, localIndividualItem.Length - dataSourceSearchString.Length).Trim();
                         }
                         else if ((!initialCatalogFound) && (localIndividualItem.StartsWith(initialCatalogSearchString)))
                         {
-                            result.InitialCatalog = localIndividualItem.Substring(initialCatalogSearchString.Length, localIndividualItem.Length - initialCatalogSearchString.Length).Trim();
+                            item.InitialCatalog = localIndividualItem.Substring(initialCatalogSearchString.Length, localIndividualItem.Length - initialCatalogSearchString.Length).Trim();
                         }
                         else if ((!integratedSecurityFound) && (localIndividualItem.StartsWith(integratedSecuritySearchString)))
                         {
-                            result.IsUsingIntegratedSecurity = true;
+                            item.IsUsingIntegratedSecurity = true;
                         }
                     }
                 }
+
+                item.IsInWhiteList = IsDataSourceInWhiteList(item, whiteListDataSourceItems);
+
+                result.ItemFromConfigurationFile.Add(item);
             }
 
             return result;

@@ -3,6 +3,7 @@
     using FakeItEasy;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System.Configuration;
+    using System.Linq;
 
     /// <summary>
     /// DatabaseConnectionStrings Tests
@@ -81,17 +82,20 @@
             var expectedFakeConnectionStrings = new ConnectionStringSettingsCollection();
             A.CallTo(() => _fakeCustomConfigurationManager.ConnectionStrings).Returns(expectedFakeConnectionStrings);
 
-            var expectedResult = new POCO.DatabaseConnectionStringItem()
+            var item = new POCO.DatabaseConnectionStringItem()
             {
                 Name = "Either no configuration file exists or no connectionString section exists"
             };
+            var expectedResult = new POCO.DatabaseConnectionStringResult();
+            expectedResult.ItemFromConfigurationFile.Add(item);
 
             // Act
             var actualResult = _databaseConnectionStrings.Validate();
 
             // Assert
             Assert.IsNotNull(actualResult);
-            Assert.AreEqual(expectedResult.Name, actualResult.Name, "Validate method returned unexpected result");
+            Assert.IsNotNull(actualResult.ItemFromConfigurationFile);
+            Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().Name, actualResult.ItemFromConfigurationFile.First().Name, "Validate method returned unexpected result for the Name");
         }
 
         /// <summary>
@@ -107,17 +111,20 @@
 
             A.CallTo(() => _fakeCustomConfigurationManager.AppSettings.Get("WhiteListDataSourceItems")).Returns(null);
 
-            var expectedResult = new POCO.DatabaseConnectionStringItem()
+            var item = new POCO.DatabaseConnectionStringItem()
             {
                 Name = "Either no configuration file exists or not appSettings section exists or the WhiteListDataSourceItems appSettings key doesn't exist"
             };
+            var expectedResult = new POCO.DatabaseConnectionStringResult();
+            expectedResult.ItemFromConfigurationFile.Add(item);
 
             // Act
             var actualResult = _databaseConnectionStrings.Validate();
 
             // Assert
             Assert.IsNotNull(actualResult);
-            Assert.AreEqual(expectedResult.Name, actualResult.Name, "Validate method returned unexpected result");
+            Assert.IsNotNull(actualResult.ItemFromConfigurationFile);
+            Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().Name, actualResult.ItemFromConfigurationFile.First().Name, "Validate method returned unexpected result for the Name");
         }
 
         /// <summary>
@@ -133,7 +140,7 @@
 
             A.CallTo(() => _fakeCustomConfigurationManager.AppSettings.Get("WhiteListDataSourceItems")).Returns("Test");
 
-            var expectedResult = new POCO.DatabaseConnectionStringItem()
+            var item = new POCO.DatabaseConnectionStringItem()
             {
                 Name = "TestName",
                 DatabaseSource = "TestDataSource",
@@ -141,17 +148,19 @@
                 IsUsingIntegratedSecurity = true,
                 IsInWhiteList = false
             };
+            var expectedResult = new POCO.DatabaseConnectionStringResult();
+            expectedResult.ItemFromConfigurationFile.Add(item);
 
             // Act
             var actualResult = _databaseConnectionStrings.Validate();
 
             // Assert
             Assert.IsNotNull(actualResult);
-            Assert.AreEqual(expectedResult.Name, actualResult.Name, "Validate method returned unexpected result");
-            Assert.AreEqual(expectedResult.DatabaseSource, actualResult.DatabaseSource, "Validate method returned unexpected result for the DatabaseSource");
-            Assert.AreEqual(expectedResult.InitialCatalog, actualResult.InitialCatalog, "Validate method returned unexpected result for the InitialCatalog");
-            Assert.AreEqual(expectedResult.IsUsingIntegratedSecurity, actualResult.IsUsingIntegratedSecurity, "Validate method returned unexpected result for the IsUsingIntegratedSecurity");
-            Assert.AreEqual(expectedResult.IsInWhiteList, actualResult.IsInWhiteList, "Validate method returned unexpected result for the IsInWhiteList");
+            Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().Name, actualResult.ItemFromConfigurationFile.First().Name, "Validate method returned unexpected result for the Name");
+            Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().DatabaseSource, actualResult.ItemFromConfigurationFile.First().DatabaseSource, "Validate method returned unexpected result for the DatabaseSource");
+            Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().InitialCatalog, actualResult.ItemFromConfigurationFile.First().InitialCatalog, "Validate method returned unexpected result for the InitialCatalog");
+            Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().IsUsingIntegratedSecurity, actualResult.ItemFromConfigurationFile.First().IsUsingIntegratedSecurity, "Validate method returned unexpected result for the IsUsingIntegratedSecurity");
+            Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().IsInWhiteList, actualResult.ItemFromConfigurationFile.First().IsInWhiteList, "Validate method returned unexpected result for the IsInWhiteList");
         }
 
         /// <summary>
@@ -166,9 +175,9 @@
             A.CallTo(() => _fakeCustomConfigurationManager.ConnectionStrings).Returns(expectedFakeConnectionStrings);
 
             // the white list value is in all lower case, not the mixed case of the connection string value
-            A.CallTo(() => _fakeCustomConfigurationManager.AppSettings.Get("WhiteListDataSourceItems")).Returns("testdatasource"); 
+            A.CallTo(() => _fakeCustomConfigurationManager.AppSettings.Get("WhiteListDataSourceItems")).Returns("testdatasource");
 
-            var expectedResult = new POCO.DatabaseConnectionStringItem()
+            var item = new POCO.DatabaseConnectionStringItem()
             {
                 Name = "TestName",
                 DatabaseSource = "TestDataSource",
@@ -176,17 +185,19 @@
                 IsUsingIntegratedSecurity = true,
                 IsInWhiteList = false
             };
+            var expectedResult = new POCO.DatabaseConnectionStringResult();
+            expectedResult.ItemFromConfigurationFile.Add(item);
 
             // Act
             var actualResult = _databaseConnectionStrings.Validate();
 
             // Assert
             Assert.IsNotNull(actualResult);
-            Assert.AreEqual(expectedResult.Name, actualResult.Name, "Validate method returned unexpected result");
-            Assert.AreEqual(expectedResult.DatabaseSource, actualResult.DatabaseSource, "Validate method returned unexpected result for the DatabaseSource");
-            Assert.AreEqual(expectedResult.InitialCatalog, actualResult.InitialCatalog, "Validate method returned unexpected result for the InitialCatalog");
-            Assert.AreEqual(expectedResult.IsUsingIntegratedSecurity, actualResult.IsUsingIntegratedSecurity, "Validate method returned unexpected result for the IsUsingIntegratedSecurity");
-            Assert.AreEqual(expectedResult.IsInWhiteList, actualResult.IsInWhiteList, "Validate method returned unexpected result for the IsInWhiteList");
+            Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().Name, actualResult.ItemFromConfigurationFile.First().Name, "Validate method returned unexpected result for the Name");
+            Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().DatabaseSource, actualResult.ItemFromConfigurationFile.First().DatabaseSource, "Validate method returned unexpected result for the DatabaseSource");
+            Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().InitialCatalog, actualResult.ItemFromConfigurationFile.First().InitialCatalog, "Validate method returned unexpected result for the InitialCatalog");
+            Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().IsUsingIntegratedSecurity, actualResult.ItemFromConfigurationFile.First().IsUsingIntegratedSecurity, "Validate method returned unexpected result for the IsUsingIntegratedSecurity");
+            Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().IsInWhiteList, actualResult.ItemFromConfigurationFile.First().IsInWhiteList, "Validate method returned unexpected result for the IsInWhiteList");
         }
 
         /// <summary>
@@ -202,7 +213,7 @@
 
             A.CallTo(() => _fakeCustomConfigurationManager.AppSettings.Get("WhiteListDataSourceItems")).Returns("TestDataSource");
 
-            var expectedResult = new POCO.DatabaseConnectionStringItem()
+            var item = new POCO.DatabaseConnectionStringItem()
             {
                 Name = "TestName",
                 DatabaseSource = "TestDataSource",
@@ -210,17 +221,19 @@
                 IsUsingIntegratedSecurity = true,
                 IsInWhiteList = true
             };
+            var expectedResult = new POCO.DatabaseConnectionStringResult();
+            expectedResult.ItemFromConfigurationFile.Add(item);
 
             // Act
             var actualResult = _databaseConnectionStrings.Validate();
 
             // Assert
             Assert.IsNotNull(actualResult);
-            Assert.AreEqual(expectedResult.Name, actualResult.Name, "Validate method returned unexpected result for the Name");
-            Assert.AreEqual(expectedResult.DatabaseSource, actualResult.DatabaseSource, "Validate method returned unexpected result for the DatabaseSource");
-            Assert.AreEqual(expectedResult.InitialCatalog, actualResult.InitialCatalog, "Validate method returned unexpected result for the InitialCatalog");
-            Assert.AreEqual(expectedResult.IsUsingIntegratedSecurity, actualResult.IsUsingIntegratedSecurity, "Validate method returned unexpected result for the IsUsingIntegratedSecurity");
-            Assert.AreEqual(expectedResult.IsInWhiteList, actualResult.IsInWhiteList, "Validate method returned unexpected result for the IsInWhiteList");
+            Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().Name, actualResult.ItemFromConfigurationFile.First().Name, "Validate method returned unexpected result for the Name");
+            Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().DatabaseSource, actualResult.ItemFromConfigurationFile.First().DatabaseSource, "Validate method returned unexpected result for the DatabaseSource");
+            Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().InitialCatalog, actualResult.ItemFromConfigurationFile.First().InitialCatalog, "Validate method returned unexpected result for the InitialCatalog");
+            Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().IsUsingIntegratedSecurity, actualResult.ItemFromConfigurationFile.First().IsUsingIntegratedSecurity, "Validate method returned unexpected result for the IsUsingIntegratedSecurity");
+            Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().IsInWhiteList, actualResult.ItemFromConfigurationFile.First().IsInWhiteList, "Validate method returned unexpected result for the IsInWhiteList");
         }
 
         /// <summary>
@@ -236,7 +249,7 @@
 
             A.CallTo(() => _fakeCustomConfigurationManager.AppSettings.Get("WhiteListDataSourceItems")).Returns("Dummy,TestDataSource");
 
-            var expectedResult = new POCO.DatabaseConnectionStringItem()
+            var item = new POCO.DatabaseConnectionStringItem()
             {
                 Name = "TestName",
                 DatabaseSource = "TestDataSource",
@@ -244,17 +257,19 @@
                 IsUsingIntegratedSecurity = true,
                 IsInWhiteList = true
             };
+            var expectedResult = new POCO.DatabaseConnectionStringResult();
+            expectedResult.ItemFromConfigurationFile.Add(item);
 
             // Act
             var actualResult = _databaseConnectionStrings.Validate();
 
             // Assert
             Assert.IsNotNull(actualResult);
-            Assert.AreEqual(expectedResult.Name, actualResult.Name, "Validate method returned unexpected result for the Name");
-            Assert.AreEqual(expectedResult.DatabaseSource, actualResult.DatabaseSource, "Validate method returned unexpected result for the DatabaseSource");
-            Assert.AreEqual(expectedResult.InitialCatalog, actualResult.InitialCatalog, "Validate method returned unexpected result for the InitialCatalog");
-            Assert.AreEqual(expectedResult.IsUsingIntegratedSecurity, actualResult.IsUsingIntegratedSecurity, "Validate method returned unexpected result for the IsUsingIntegratedSecurity");
-            Assert.AreEqual(expectedResult.IsInWhiteList, actualResult.IsInWhiteList, "Validate method returned unexpected result for the IsInWhiteList");
+            Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().Name, actualResult.ItemFromConfigurationFile.First().Name, "Validate method returned unexpected result for the Name");
+            Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().DatabaseSource, actualResult.ItemFromConfigurationFile.First().DatabaseSource, "Validate method returned unexpected result for the DatabaseSource");
+            Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().InitialCatalog, actualResult.ItemFromConfigurationFile.First().InitialCatalog, "Validate method returned unexpected result for the InitialCatalog");
+            Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().IsUsingIntegratedSecurity, actualResult.ItemFromConfigurationFile.First().IsUsingIntegratedSecurity, "Validate method returned unexpected result for the IsUsingIntegratedSecurity");
+            Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().IsInWhiteList, actualResult.ItemFromConfigurationFile.First().IsInWhiteList, "Validate method returned unexpected result for the IsInWhiteList");
         }
     }
 }
