@@ -95,6 +95,7 @@
             // Assert
             Assert.IsNotNull(actualResult);
             Assert.IsNotNull(actualResult.ItemFromConfigurationFile);
+            Assert.AreEqual(1, actualResult.ItemFromConfigurationFile.Count);
             Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().Name, actualResult.ItemFromConfigurationFile.First().Name, "Validate method returned unexpected result for the Name");
         }
 
@@ -124,6 +125,7 @@
             // Assert
             Assert.IsNotNull(actualResult);
             Assert.IsNotNull(actualResult.ItemFromConfigurationFile);
+            Assert.AreEqual(1, actualResult.ItemFromConfigurationFile.Count);
             Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().Name, actualResult.ItemFromConfigurationFile.First().Name, "Validate method returned unexpected result for the Name");
         }
 
@@ -156,6 +158,8 @@
 
             // Assert
             Assert.IsNotNull(actualResult);
+            Assert.IsNotNull(actualResult.ItemFromConfigurationFile);
+            Assert.AreEqual(1, actualResult.ItemFromConfigurationFile.Count);
             Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().Name, actualResult.ItemFromConfigurationFile.First().Name, "Validate method returned unexpected result for the Name");
             Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().DatabaseSource, actualResult.ItemFromConfigurationFile.First().DatabaseSource, "Validate method returned unexpected result for the DatabaseSource");
             Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().InitialCatalog, actualResult.ItemFromConfigurationFile.First().InitialCatalog, "Validate method returned unexpected result for the InitialCatalog");
@@ -193,6 +197,8 @@
 
             // Assert
             Assert.IsNotNull(actualResult);
+            Assert.IsNotNull(actualResult.ItemFromConfigurationFile);
+            Assert.AreEqual(1, actualResult.ItemFromConfigurationFile.Count);
             Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().Name, actualResult.ItemFromConfigurationFile.First().Name, "Validate method returned unexpected result for the Name");
             Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().DatabaseSource, actualResult.ItemFromConfigurationFile.First().DatabaseSource, "Validate method returned unexpected result for the DatabaseSource");
             Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().InitialCatalog, actualResult.ItemFromConfigurationFile.First().InitialCatalog, "Validate method returned unexpected result for the InitialCatalog");
@@ -229,6 +235,8 @@
 
             // Assert
             Assert.IsNotNull(actualResult);
+            Assert.IsNotNull(actualResult.ItemFromConfigurationFile);
+            Assert.AreEqual(1, actualResult.ItemFromConfigurationFile.Count);
             Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().Name, actualResult.ItemFromConfigurationFile.First().Name, "Validate method returned unexpected result for the Name");
             Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().DatabaseSource, actualResult.ItemFromConfigurationFile.First().DatabaseSource, "Validate method returned unexpected result for the DatabaseSource");
             Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().InitialCatalog, actualResult.ItemFromConfigurationFile.First().InitialCatalog, "Validate method returned unexpected result for the InitialCatalog");
@@ -265,11 +273,67 @@
 
             // Assert
             Assert.IsNotNull(actualResult);
+            Assert.IsNotNull(actualResult.ItemFromConfigurationFile);
+            Assert.AreEqual(1, actualResult.ItemFromConfigurationFile.Count);
             Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().Name, actualResult.ItemFromConfigurationFile.First().Name, "Validate method returned unexpected result for the Name");
             Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().DatabaseSource, actualResult.ItemFromConfigurationFile.First().DatabaseSource, "Validate method returned unexpected result for the DatabaseSource");
             Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().InitialCatalog, actualResult.ItemFromConfigurationFile.First().InitialCatalog, "Validate method returned unexpected result for the InitialCatalog");
             Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().IsUsingIntegratedSecurity, actualResult.ItemFromConfigurationFile.First().IsUsingIntegratedSecurity, "Validate method returned unexpected result for the IsUsingIntegratedSecurity");
             Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().IsInWhiteList, actualResult.ItemFromConfigurationFile.First().IsInWhiteList, "Validate method returned unexpected result for the IsInWhiteList");
+        }
+
+        /// <summary>
+        /// When_ConnectionStrings_in_configuration_file_has_two_entries_and_WhiteList_has_one_value_that_only_matches_the_first_connection_string_entry_Validate_Method_for_WhiteList_value_returns_true_for_first_and_false_for_second
+        /// </summary>
+        [TestMethod]
+        public void When_ConnectionStrings_in_configuration_file_has_two_entries_and_WhiteList_has_one_value_that_only_matches_the_first_connection_string_entry_Validate_Method_for_WhiteList_value_returns_true_for_first_and_false_for_second()
+        {
+            // Arrange            
+            var expectedFakeConnectionStrings = new ConnectionStringSettingsCollection();
+            expectedFakeConnectionStrings.Add(new ConnectionStringSettings { Name = "TestName", ConnectionString = "Data Source=TestDataSource;Initial Catalog=TestInitialCatalog;integrated security=SSPI;" });
+            expectedFakeConnectionStrings.Add(new ConnectionStringSettings { Name = "TestName2", ConnectionString = "Data Source=TestDataSource2;Initial Catalog=TestInitialCatalog2;integrated security=SSPI;" });
+            A.CallTo(() => _fakeCustomConfigurationManager.ConnectionStrings).Returns(expectedFakeConnectionStrings);
+
+            A.CallTo(() => _fakeCustomConfigurationManager.AppSettings.Get("WhiteListDataSourceItems")).Returns("TestDataSource");
+
+            var item = new POCO.DatabaseConnectionStringItem()
+            {
+                Name = "TestName",
+                DatabaseSource = "TestDataSource",
+                InitialCatalog = "TestInitialCatalog",
+                IsUsingIntegratedSecurity = true,
+                IsInWhiteList = true
+            };
+            var expectedResult = new POCO.DatabaseConnectionStringResult();
+            expectedResult.ItemFromConfigurationFile.Add(item);
+
+            item = new POCO.DatabaseConnectionStringItem()
+            {
+                Name = "TestName2",
+                DatabaseSource = "TestDataSource2",
+                InitialCatalog = "TestInitialCatalog2",
+                IsUsingIntegratedSecurity = true,
+                IsInWhiteList = false
+            };
+            expectedResult.ItemFromConfigurationFile.Add(item);
+
+            // Act
+            var actualResult = _databaseConnectionStrings.Validate();
+
+            // Assert
+            Assert.IsNotNull(actualResult);
+            Assert.IsNotNull(actualResult.ItemFromConfigurationFile);
+            Assert.AreEqual(2, actualResult.ItemFromConfigurationFile.Count);
+            Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().Name, actualResult.ItemFromConfigurationFile.First().Name, "Validate method returned unexpected result for the Name");
+            Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().DatabaseSource, actualResult.ItemFromConfigurationFile.First().DatabaseSource, "Validate method returned unexpected result for the DatabaseSource");
+            Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().InitialCatalog, actualResult.ItemFromConfigurationFile.First().InitialCatalog, "Validate method returned unexpected result for the InitialCatalog");
+            Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().IsUsingIntegratedSecurity, actualResult.ItemFromConfigurationFile.First().IsUsingIntegratedSecurity, "Validate method returned unexpected result for the IsUsingIntegratedSecurity");
+            Assert.AreEqual(expectedResult.ItemFromConfigurationFile.First().IsInWhiteList, actualResult.ItemFromConfigurationFile.First().IsInWhiteList, "Validate method returned unexpected result for the IsInWhiteList");
+            Assert.AreEqual(expectedResult.ItemFromConfigurationFile.ElementAt(1).Name, actualResult.ItemFromConfigurationFile.ElementAt(1).Name, "Validate method returned unexpected result for the Name");
+            Assert.AreEqual(expectedResult.ItemFromConfigurationFile.ElementAt(1).DatabaseSource, actualResult.ItemFromConfigurationFile.ElementAt(1).DatabaseSource, "Validate method returned unexpected result for the DatabaseSource");
+            Assert.AreEqual(expectedResult.ItemFromConfigurationFile.ElementAt(1).InitialCatalog, actualResult.ItemFromConfigurationFile.ElementAt(1).InitialCatalog, "Validate method returned unexpected result for the InitialCatalog");
+            Assert.AreEqual(expectedResult.ItemFromConfigurationFile.ElementAt(1).IsUsingIntegratedSecurity, actualResult.ItemFromConfigurationFile.ElementAt(1).IsUsingIntegratedSecurity, "Validate method returned unexpected result for the IsUsingIntegratedSecurity");
+            Assert.AreEqual(expectedResult.ItemFromConfigurationFile.ElementAt(1).IsInWhiteList, actualResult.ItemFromConfigurationFile.ElementAt(1).IsInWhiteList, "Validate method returned unexpected result for the IsInWhiteList");
         }
     }
 }
