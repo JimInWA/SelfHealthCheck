@@ -51,9 +51,9 @@
         /// Determines if the connection strings in the configuration file are valid
         /// </summary>
         /// <returns></returns>
-        public POCO.DatabaseConnectionStringResult Validate()
+        public POCO.DatabaseConnectionStringItem Validate()
         {
-            var result = new POCO.DatabaseConnectionStringResult();
+            var result = new POCO.DatabaseConnectionStringItem();
 
             // TODOs:
             // 1. Determine how to represent a list of results along with an error message
@@ -89,9 +89,9 @@
             return result;
         }
 
-        private POCO.DatabaseConnectionStringResult BreakConnectionStringIntoSeparateValues(ConnectionStringSettingsCollection connectionStringSettings)
+        private POCO.DatabaseConnectionStringItem BreakConnectionStringIntoSeparateValues(ConnectionStringSettingsCollection connectionStringSettings)
         {
-            var result = new POCO.DatabaseConnectionStringResult();
+            var result = new POCO.DatabaseConnectionStringItem();
 
             var dataSourceSearchString = "Data Source=";
             var initialCatalogSearchString = "Initial Catalog=";
@@ -129,7 +129,7 @@
             return result;
         }
 
-        private bool IsDataSourceInWhiteList(POCO.DatabaseConnectionStringResult result, string[] whiteListDataSourceItems)
+        private bool IsDataSourceInWhiteList(POCO.DatabaseConnectionStringItem result, string[] whiteListDataSourceItems)
         {
             var isDataSourceInWhiteList = false;
             foreach (string individualItem in whiteListDataSourceItems)

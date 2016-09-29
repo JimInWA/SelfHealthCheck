@@ -25,6 +25,6 @@
         /// Determines if the connection strings in the configuration file are valid
         /// </summary>
         /// <returns></returns>
-        POCO.DatabaseConnectionStringResult Validate();
+        POCO.DatabaseConnectionStringItem Validate();
     }
 }

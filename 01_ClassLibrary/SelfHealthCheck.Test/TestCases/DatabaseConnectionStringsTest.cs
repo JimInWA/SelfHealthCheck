@@ -81,7 +81,7 @@
             var expectedFakeConnectionStrings = new ConnectionStringSettingsCollection();
             A.CallTo(() => _fakeCustomConfigurationManager.ConnectionStrings).Returns(expectedFakeConnectionStrings);
 
-            var expectedResult = new POCO.DatabaseConnectionStringResult()
+            var expectedResult = new POCO.DatabaseConnectionStringItem()
             {
                 Name = "Either no configuration file exists or no connectionString section exists"
             };
@@ -107,7 +107,7 @@
 
             A.CallTo(() => _fakeCustomConfigurationManager.AppSettings.Get("WhiteListDataSourceItems")).Returns(null);
 
-            var expectedResult = new POCO.DatabaseConnectionStringResult()
+            var expectedResult = new POCO.DatabaseConnectionStringItem()
             {
                 Name = "Either no configuration file exists or not appSettings section exists or the WhiteListDataSourceItems appSettings key doesn't exist"
             };
@@ -133,7 +133,7 @@
 
             A.CallTo(() => _fakeCustomConfigurationManager.AppSettings.Get("WhiteListDataSourceItems")).Returns("Test");
 
-            var expectedResult = new POCO.DatabaseConnectionStringResult()
+            var expectedResult = new POCO.DatabaseConnectionStringItem()
             {
                 Name = "TestName",
                 DatabaseSource = "TestDataSource",
@@ -168,7 +168,7 @@
             // the white list value is in all lower case, not the mixed case of the connection string value
             A.CallTo(() => _fakeCustomConfigurationManager.AppSettings.Get("WhiteListDataSourceItems")).Returns("testdatasource"); 
 
-            var expectedResult = new POCO.DatabaseConnectionStringResult()
+            var expectedResult = new POCO.DatabaseConnectionStringItem()
             {
                 Name = "TestName",
                 DatabaseSource = "TestDataSource",
@@ -190,7 +190,7 @@
         }
 
         /// <summary>
-        /// public void When_ConnectionStrings_in_configuration_file_has_one_entry_and_WhiteList_has_one_value_Validate_Method_returns_the_distinct_values_for_the_one_entry
+        /// When_ConnectionStrings_in_configuration_file_has_one_entry_and_WhiteList_has_one_value_Validate_Method_returns_the_distinct_values_for_the_one_entry
         /// </summary>
         [TestMethod]
         public void When_ConnectionStrings_in_configuration_file_has_one_entry_and_WhiteList_has_one_value_Validate_Method_returns_the_distinct_values_for_the_one_entry()
@@ -202,7 +202,7 @@
 
             A.CallTo(() => _fakeCustomConfigurationManager.AppSettings.Get("WhiteListDataSourceItems")).Returns("TestDataSource");
 
-            var expectedResult = new POCO.DatabaseConnectionStringResult()
+            var expectedResult = new POCO.DatabaseConnectionStringItem()
             {
                 Name = "TestName",
                 DatabaseSource = "TestDataSource",
@@ -224,7 +224,7 @@
         }
 
         /// <summary>
-        /// public void When_ConnectionStrings_in_configuration_file_has_one_entry_and_WhiteList_has_two_values_Validate_Method_returns_the_distinct_values_for_the_one_entry
+        /// When_ConnectionStrings_in_configuration_file_has_one_entry_and_WhiteList_has_two_values_Validate_Method_returns_the_distinct_values_for_the_one_entry()
         /// </summary>
         [TestMethod]
         public void When_ConnectionStrings_in_configuration_file_has_one_entry_and_WhiteList_has_two_values_Validate_Method_returns_the_distinct_values_for_the_one_entry()
@@ -236,7 +236,7 @@
 
             A.CallTo(() => _fakeCustomConfigurationManager.AppSettings.Get("WhiteListDataSourceItems")).Returns("Dummy,TestDataSource");
 
-            var expectedResult = new POCO.DatabaseConnectionStringResult()
+            var expectedResult = new POCO.DatabaseConnectionStringItem()
             {
                 Name = "TestName",
                 DatabaseSource = "TestDataSource",

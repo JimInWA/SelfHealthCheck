@@ -1,9 +1,9 @@
 ﻿namespace SelfHealthCheck.POCO
 {
     /// <summary>
-    /// DatabaseConnectionString Result object
+    /// DatabaseConnectionStringItem object
     /// </summary>
-    public class DatabaseConnectionStringResult
+    public class DatabaseConnectionStringItem
     {
         /// <summary>
         /// ConnectionString Name attribute
