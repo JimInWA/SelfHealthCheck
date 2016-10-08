@@ -57,7 +57,18 @@
             var item = new POCO.DatabaseConnectionStringItem();
 
             // TODOs:
-            // 1. Change Validate to return a JSON data structure and update the tests
+            // 0a. Add tests to expect an exception for the GetConnectionStrings and
+            //    GetWhiteListDataSourceItems methods when _customConfigurationManager methods
+            //    throw an exception.  Modify the /// comments to indicate that the caller
+            //    needs to handle an exception
+            // 0b. Add tests to expect an exception for the GetConnectionStrings and
+            //    GetWhiteListDataSourceItems methods.  Modify the /// comments to indicate that the caller
+            //    needs to handle an exception
+            // 0c. Add tests to expect a handled exception when Validate method calls either
+            //    GetConnectionStrings or GetWhiteListDataSourceItems methods and those 
+            //    methods throw an exception.  Modify the Validate method to handle this exception
+            // 1. Modify the tests for the Validate method to expect a JSON data structure to 
+            //    be returned.  Modify Validate to return a JSON data structure
             // 2. Create an ASP.NET MVC Controller that calls the Validate method and 
             //    returns the JSON data structure
             var connectionStringSettings = GetConnectionStrings();

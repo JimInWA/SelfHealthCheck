@@ -35,11 +35,13 @@
 
         #endregion
 
+        #region GetConnectionStrings Method - Happy Path
+
         /// <summary>
-        /// When_ConnectionStrings_in_configuration_file_is_empty_GetConnectionStrings_Method_returns_empty_ConnectionStringSettingsCollection_result
+        /// GetConnectionStrings_Method_Happy_Path_When_ConnectionStrings_in_configuration_file_is_empty_method_returns_empty_ConnectionStringSettingsCollection_result
         /// </summary>
         [TestMethod]
-        public void When_ConnectionStrings_in_configuration_file_is_empty_GetConnectionStrings_Method_returns_empty_ConnectionStringSettingsCollection_result()
+        public void GetConnectionStrings_Method_Happy_Path_When_ConnectionStrings_in_configuration_file_is_empty_method_returns_empty_ConnectionStringSettingsCollection_result()
         {
             // Arrange
             var expectedFakeConnectionStrings = new ConnectionStringSettingsCollection();
@@ -54,10 +56,10 @@
         }
 
         /// <summary>
-        /// When_ConnectionStrings_in_configuration_file_has_one_entry_GetConnectionStrings_Method_returns_ConnectionStringSettingsCollection_result_with_one_result
+        /// GetConnectionStrings_Method_Happy_Path_When_ConnectionStrings_in_configuration_file_has_one_entry_method_returns_ConnectionStringSettingsCollection_result_with_one_result
         /// </summary>
         [TestMethod]
-        public void When_ConnectionStrings_in_configuration_file_has_one_entry_GetConnectionStrings_Method_returns_ConnectionStringSettingsCollection_result_with_one_result()
+        public void GetConnectionStrings_Method_Happy_Path_When_ConnectionStrings_in_configuration_file_has_one_entry_method_returns_ConnectionStringSettingsCollection_result_with_one_result()
         {
             // Arrange            
             var expectedFakeConnectionStrings = new ConnectionStringSettingsCollection();
@@ -72,11 +74,15 @@
             Assert.AreEqual(expectedFakeConnectionStrings, actualConnectionStrings, "The ConnectionStringCollection that was returned didn't match the expected value");
         }
 
+        #endregion GetConnectionStrings Method - Happy Path
+
+        #region Validate Method - Sad Path
+
         /// <summary>
-        /// When_ConnectionStrings_in_configuration_file_is_empty_Validate_Method_returns_error_condition
+        /// Validate_Method_Sad_Path_When_ConnectionStrings_in_configuration_file_is_empty_method_returns_error_condition
         /// </summary>
         [TestMethod]
-        public void When_ConnectionStrings_in_configuration_file_is_empty_Validate_Method_returns_error_condition()
+        public void Validate_Method_Sad_Path_When_ConnectionStrings_in_configuration_file_is_empty_method_returns_error_condition()
         {
             // Arrange
             var expectedFakeConnectionStrings = new ConnectionStringSettingsCollection();
@@ -98,10 +104,10 @@
         }
 
         /// <summary>
-        /// When_ConnectionStrings_in_configuration_file_has_one_entry_Validate_Method_but_WhiteListDataSourceItems_is_missing__returns_error_condition
+        /// Validate_Method_Sad_Path_When_ConnectionStrings_in_configuration_file_has_one_entry_but_WhiteListDataSourceItems_is_missing_method_returns_error_condition
         /// </summary>
         [TestMethod]
-        public void When_ConnectionStrings_in_configuration_file_has_one_entry_Validate_Method_but_WhiteListDataSourceItems_is_missing__returns_error_condition()
+        public void Validate_Method_Sad_Path_When_ConnectionStrings_in_configuration_file_has_one_entry_but_WhiteListDataSourceItems_is_missing_method_returns_error_condition()
         {
             // Arrange            
             var expectedFakeConnectionStrings = new ConnectionStringSettingsCollection();
@@ -126,10 +132,10 @@
         }
 
         /// <summary>
-        /// When_ConnectionStrings_in_configuration_file_has_one_entry_Validate_Method_but_WhiteListDataSourceItems_has_one_item_that_does_not_match_the_datasource_entry_returns_error_condition
+        /// Validate_Method_Sad_Path_When_ConnectionStrings_in_configuration_file_has_one_entry_but_WhiteListDataSourceItems_has_one_item_that_does_not_match_the_datasource_entry_method_returns_error_condition
         /// </summary>
         [TestMethod]
-        public void When_ConnectionStrings_in_configuration_file_has_one_entry_Validate_Method_but_WhiteListDataSourceItems_has_one_item_that_does_not_match_the_datasource_entry_returns_error_condition()
+        public void Validate_Method_Sad_Path_When_ConnectionStrings_in_configuration_file_has_one_entry_but_WhiteListDataSourceItems_has_one_item_that_does_not_match_the_datasource_entry_method_returns_error_condition()
         {
             // Arrange            
             var expectedFakeConnectionStrings = new ConnectionStringSettingsCollection();
@@ -166,16 +172,15 @@
             Assert.IsNotNull(actualResult.ErrorMessageInformation, "ErrorMessageInformation is null");
             Assert.AreEqual(1, actualResult.ErrorMessageInformation.Count, "ErrorMessageInformation.Count");
             Assert.AreEqual(expectedResult.ErrorMessageInformation.First(), actualResult.ErrorMessageInformation.First(), "Validate method returned unexpected result for the ErrorMessageInformation");
-            Assert.IsNotNull(actualResult.WhiteListDatabaseConnectionString,"WhiteListDatabaseConnectionString is null");
+            Assert.IsNotNull(actualResult.WhiteListDatabaseConnectionString, "WhiteListDatabaseConnectionString is null");
             Assert.AreEqual(1, actualResult.WhiteListDatabaseConnectionString.Count, "WhiteListDatabaseConnectionString.Count");
             Assert.AreEqual(expectedResult.WhiteListDatabaseConnectionString.First(), actualResult.WhiteListDatabaseConnectionString.First(), "Validate method returned unexpected result for the WhiteListDatabaseConnectionString");
         }
-
         /// <summary>
-        /// When_ConnectionStrings_in_configuration_file_has_one_entry_Validate_Method_but_WhiteListDataSourceItems_has_one_item_matches_the_spelling_but_not_the_capitalization_of_datasource_entry_returns_error_condition
+        /// Validate_Method_Sad_Path_When_ConnectionStrings_in_configuration_file_has_one_entry_but_WhiteListDataSourceItems_has_one_item_matches_the_spelling_but_not_the_capitalization_of_datasource_entry_method_returns_error_condition
         /// </summary>
         [TestMethod]
-        public void When_ConnectionStrings_in_configuration_file_has_one_entry_Validate_Method_but_WhiteListDataSourceItems_has_one_item_matches_the_spelling_but_not_the_capitalization_of_datasource_entry_returns_error_condition()
+        public void Validate_Method_Sad_Path_When_ConnectionStrings_in_configuration_file_has_one_entry_but_WhiteListDataSourceItems_has_one_item_matches_the_spelling_but_not_the_capitalization_of_datasource_entry_method_returns_error_condition()
         {
             // Arrange            
             var expectedFakeConnectionStrings = new ConnectionStringSettingsCollection();
@@ -214,16 +219,19 @@
             Assert.IsNotNull(actualResult.ErrorMessageInformation, "ErrorMessageInformation is null");
             Assert.AreEqual(1, actualResult.ErrorMessageInformation.Count, "ErrorMessageInformation.Count");
             Assert.AreEqual(expectedResult.ErrorMessageInformation.First(), actualResult.ErrorMessageInformation.First(), "Validate method returned unexpected result for the ErrorMessageInformation");
-            Assert.IsNotNull(actualResult.WhiteListDatabaseConnectionString,"WhiteListDatabaseConnectionString is null");
+            Assert.IsNotNull(actualResult.WhiteListDatabaseConnectionString, "WhiteListDatabaseConnectionString is null");
             Assert.AreEqual(1, actualResult.WhiteListDatabaseConnectionString.Count, "WhiteListDatabaseConnectionString.Count");
             Assert.AreEqual(expectedResult.WhiteListDatabaseConnectionString.First(), actualResult.WhiteListDatabaseConnectionString.First(), "Validate method returned unexpected result for the WhiteListDatabaseConnectionString");
         }
 
+        #endregion Validate Method - Sad Path
+
+        #region Validate Method - Happy Path
         /// <summary>
-        /// When_ConnectionStrings_in_configuration_file_has_one_entry_and_WhiteList_has_one_value_Validate_Method_returns_the_distinct_values_for_the_one_entry
+        /// Validate_Method_Happy_Path_When_ConnectionStrings_in_configuration_file_has_one_entry_and_WhiteList_has_one_value_method_returns_the_distinct_values_for_the_one_entry
         /// </summary>
         [TestMethod]
-        public void When_ConnectionStrings_in_configuration_file_has_one_entry_and_WhiteList_has_one_value_Validate_Method_returns_the_distinct_values_for_the_one_entry()
+        public void Validate_Method_Happy_Path_When_ConnectionStrings_in_configuration_file_has_one_entry_and_WhiteList_has_one_value_method_returns_the_distinct_values_for_the_one_entry()
         {
             // Arrange            
             var expectedFakeConnectionStrings = new ConnectionStringSettingsCollection();
@@ -264,10 +272,10 @@
         }
 
         /// <summary>
-        /// When_ConnectionStrings_in_configuration_file_has_one_entry_and_WhiteList_has_two_values_Validate_Method_returns_the_distinct_values_for_the_one_entry()
+        /// Validate_Method_Happy_Path_When_ConnectionStrings_in_configuration_file_has_one_entry_and_WhiteList_has_two_values_method_returns_the_distinct_values_for_the_one_entry()
         /// </summary>
         [TestMethod]
-        public void When_ConnectionStrings_in_configuration_file_has_one_entry_and_WhiteList_has_two_values_Validate_Method_returns_the_distinct_values_for_the_one_entry()
+        public void Validate_Method_Happy_Path_When_ConnectionStrings_in_configuration_file_has_one_entry_and_WhiteList_has_two_values_method_returns_the_distinct_values_for_the_one_entry()
         {
             // Arrange            
             var expectedFakeConnectionStrings = new ConnectionStringSettingsCollection();
@@ -310,10 +318,10 @@
         }
 
         /// <summary>
-        /// When_ConnectionStrings_in_configuration_file_has_two_entries_and_WhiteList_has_one_value_that_only_matches_the_first_connection_string_entry_Validate_Method_for_WhiteList_value_returns_true_for_first_and_false_for_second
+        /// Validate_Method_Happy_Path_When_ConnectionStrings_in_configuration_file_has_two_entries_and_WhiteList_has_one_value_that_only_matches_the_first_connection_string_entry_method_for_WhiteList_value_returns_true_for_first_and_false_for_second
         /// </summary>
         [TestMethod]
-        public void When_ConnectionStrings_in_configuration_file_has_two_entries_and_WhiteList_has_one_value_that_only_matches_the_first_connection_string_entry_Validate_Method_for_WhiteList_value_returns_true_for_first_and_false_for_second()
+        public void Validate_Method_Happy_Path_When_ConnectionStrings_in_configuration_file_has_two_entries_and_WhiteList_has_one_value_that_only_matches_the_first_connection_string_entry_method_for_WhiteList_value_returns_true_for_first_and_false_for_second()
         {
             // Arrange            
             var expectedFakeConnectionStrings = new ConnectionStringSettingsCollection();
@@ -370,5 +378,8 @@
             Assert.AreEqual(1, actualResult.WhiteListDatabaseConnectionString.Count, "WhiteListDatabaseConnectionString.Count");
             Assert.AreEqual(expectedResult.WhiteListDatabaseConnectionString.First(), actualResult.WhiteListDatabaseConnectionString.First(), "Validate method returned unexpected result for the WhiteListDatabaseConnectionString");
         }
+
+        #endregion Validate Method - Happy Path
+
     }
 }
