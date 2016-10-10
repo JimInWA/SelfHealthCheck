@@ -13,7 +13,7 @@
     {
         #region Private Fields
 
-        private static Interfaces.ICustomConfigurationManager _fakeCustomConfigurationManager;
+        private static SelfHealthCheck.Custom.Interfaces.ICustomConfigurationManager _fakeCustomConfigurationManager;
 
         private static SelfHealthCheck.ConfigurationCheck.Interfaces.IDatabaseConnectionStrings _databaseConnectionStrings;
 
@@ -28,7 +28,7 @@
         public void TestInitializer()
         {
             // explicitly create fake dependencies that need to be intercepted
-            _fakeCustomConfigurationManager = A.Fake<Interfaces.ICustomConfigurationManager>();
+            _fakeCustomConfigurationManager = A.Fake<SelfHealthCheck.Custom.Interfaces.ICustomConfigurationManager>();
 
             _databaseConnectionStrings = new SelfHealthCheck.ConfigurationCheck.DatabaseConnectionStrings(_fakeCustomConfigurationManager);            
         }

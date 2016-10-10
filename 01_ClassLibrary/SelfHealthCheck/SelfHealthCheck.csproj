@@ -44,9 +44,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CustomConfigurationManager.cs" />
+    <Compile Include="Custom\CustomConfigurationManager.cs" />
     <Compile Include="ConfigurationCheck\DatabaseConnectionStrings.cs" />
-    <Compile Include="Interfaces\ICustomConfigurationManager.cs" />
+    <Compile Include="Custom\Interfaces\ICustomConfigurationManager.cs" />
     <Compile Include="ConfigurationCheck\Interfaces\IDatabaseConnectionStrings.cs" />
     <Compile Include="POCO\DatabaseConnectionStringItem.cs" />
     <Compile Include="POCO\DatabaseConnectionStringResult.cs" />

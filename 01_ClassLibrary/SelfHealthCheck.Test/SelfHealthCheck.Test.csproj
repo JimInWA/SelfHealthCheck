@@ -62,7 +62,6 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="CustomConfigurationManager.cs" />
     <Compile Include="TestCases\ConfigurationCheck\DatabaseConnectionStringsTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

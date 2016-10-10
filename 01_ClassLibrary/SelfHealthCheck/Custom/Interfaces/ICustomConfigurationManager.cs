@@ -1,4 +1,4 @@
-﻿namespace SelfHealthCheck.Interfaces
+﻿namespace SelfHealthCheck.Custom.Interfaces
 {
     using System.Collections.Generic;
     using System.Collections.Specialized;

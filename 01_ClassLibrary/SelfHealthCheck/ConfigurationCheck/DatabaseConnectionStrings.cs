@@ -11,7 +11,7 @@
     {
         #region Private Fields
 
-        private static SelfHealthCheck.Interfaces.ICustomConfigurationManager _customConfigurationManager;
+        private static SelfHealthCheck.Custom.Interfaces.ICustomConfigurationManager _customConfigurationManager;
 
         #endregion
 
@@ -19,7 +19,7 @@
         /// DatabaseConnectionStrings constructor 
         /// </summary>
         /// <param name="customConfigurationManager"></param>
-        public DatabaseConnectionStrings(SelfHealthCheck.Interfaces.ICustomConfigurationManager customConfigurationManager)
+        public DatabaseConnectionStrings(SelfHealthCheck.Custom.Interfaces.ICustomConfigurationManager customConfigurationManager)
         {
             _customConfigurationManager = customConfigurationManager;
         }

@@ -1,4 +1,4 @@
-﻿namespace SelfHealthCheck
+﻿namespace SelfHealthCheck.Custom
 {
     using System;
     using System.Collections.Generic;
