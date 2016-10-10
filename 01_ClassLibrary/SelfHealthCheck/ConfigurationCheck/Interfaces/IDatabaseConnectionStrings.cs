@@ -1,4 +1,4 @@
-﻿namespace SelfHealthCheck.Interfaces
+﻿namespace SelfHealthCheck.ConfigurationCheck.Interfaces
 {
     using System.Configuration;
 

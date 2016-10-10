@@ -1,4 +1,4 @@
-﻿namespace SelfHealthCheck.Test.TestCases
+﻿namespace SelfHealthCheck.Test.TestCases.ConfigurationCheck
 {
     using FakeItEasy;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -15,7 +15,7 @@
 
         private static Interfaces.ICustomConfigurationManager _fakeCustomConfigurationManager;
 
-        private static Interfaces.IDatabaseConnectionStrings _databaseConnectionStrings;
+        private static SelfHealthCheck.ConfigurationCheck.Interfaces.IDatabaseConnectionStrings _databaseConnectionStrings;
 
         #endregion
 
@@ -30,7 +30,7 @@
             // explicitly create fake dependencies that need to be intercepted
             _fakeCustomConfigurationManager = A.Fake<Interfaces.ICustomConfigurationManager>();
 
-            _databaseConnectionStrings = new DatabaseConnectionStrings(_fakeCustomConfigurationManager);            
+            _databaseConnectionStrings = new SelfHealthCheck.ConfigurationCheck.DatabaseConnectionStrings(_fakeCustomConfigurationManager);            
         }
 
         #endregion

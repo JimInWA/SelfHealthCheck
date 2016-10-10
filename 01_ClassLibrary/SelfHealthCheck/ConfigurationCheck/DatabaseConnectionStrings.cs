@@ -1,4 +1,4 @@
-﻿namespace SelfHealthCheck
+﻿namespace SelfHealthCheck.ConfigurationCheck
 {
     using System.Configuration;
 
@@ -11,7 +11,7 @@
     {
         #region Private Fields
 
-        private static Interfaces.ICustomConfigurationManager _customConfigurationManager;
+        private static SelfHealthCheck.Interfaces.ICustomConfigurationManager _customConfigurationManager;
 
         #endregion
 
@@ -19,7 +19,7 @@
         /// DatabaseConnectionStrings constructor 
         /// </summary>
         /// <param name="customConfigurationManager"></param>
-        public DatabaseConnectionStrings(Interfaces.ICustomConfigurationManager customConfigurationManager)
+        public DatabaseConnectionStrings(SelfHealthCheck.Interfaces.ICustomConfigurationManager customConfigurationManager)
         {
             _customConfigurationManager = customConfigurationManager;
         }
