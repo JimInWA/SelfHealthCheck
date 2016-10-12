@@ -39,32 +39,6 @@
         }
 
         /// <summary>
-        /// TryGetValueCollectionByKey used to AppSettings keys where the values represent collections (lists).
-        /// If exception occurs, empty collection of T is returned.
-        /// </summary>
-        /// <param name="key"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public IEnumerable<T> TryGetValueCollectionByKey<T>(string key)
-        {
-            var valueAsString = ConfigurationManager.AppSettings[key];
-
-            try
-            {
-                if (valueAsString == null)
-                {
-                    throw new SettingsPropertyNotFoundException(string.Format("AppSettings key [{0}] not found", key));
-                }
-
-                return valueAsString.Split(',').Select(s => (T)Convert.ChangeType(s.Trim(), typeof(T)));
-            }
-            catch (Exception)
-            {
-                return Enumerable.Empty<T>();
-            }
-        }
-
-        /// <summary>
         /// TryGetValueByKey used to get AppSettings keys where the values are being converted from the stored string to some other data type
         /// If exception occurs, default value of T is returned.
         /// </summary>
@@ -87,6 +61,32 @@
             catch (Exception)
             {
                 return default(T);
+            }
+        }
+
+        /// <summary>
+        /// TryGetValueCollectionByKey used to get AppSettings keys where the values represent collections (lists).
+        /// If exception occurs, empty collection of T is returned.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public IEnumerable<T> TryGetValueCollectionByKey<T>(string key)
+        {
+            var valueAsString = ConfigurationManager.AppSettings[key];
+
+            try
+            {
+                if (valueAsString == null)
+                {
+                    throw new SettingsPropertyNotFoundException(string.Format("AppSettings key [{0}] not found", key));
+                }
+
+                return valueAsString.Split(',').Select(s => (T)Convert.ChangeType(s.Trim(), typeof(T)));
+            }
+            catch (Exception)
+            {
+                return Enumerable.Empty<T>();
             }
         }
     }

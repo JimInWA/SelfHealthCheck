@@ -57,6 +57,9 @@
             var item = new POCO.DatabaseConnectionStringItem();
 
             // TODOs:
+            // 0. Add a test that uses the actual AppSettings WhiteListDataSourceItemskey 
+            //    entry and actual connectionStrings SampleLoggingConnectionString entry
+            //    to test what happens with those 2 phantom values
             // 0a. Add tests to expect an exception for the GetConnectionStrings and
             //    GetWhiteListDataSourceItems methods when _customConfigurationManager methods
             //    throw an exception.  Modify the /// comments to indicate that the caller

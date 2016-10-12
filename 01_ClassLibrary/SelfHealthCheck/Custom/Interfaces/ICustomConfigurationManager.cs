@@ -23,15 +23,6 @@
         ConnectionStringSettingsCollection ConnectionStrings { get; }
 
         /// <summary>
-        /// TryGetValueCollectionByKey used to AppSettings keys where the values represent collections (lists).
-        /// If exception occurs, empty collection of T is returned.
-        /// </summary>
-        /// <param name="key"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        IEnumerable<T> TryGetValueCollectionByKey<T>(string key);
-
-        /// <summary>
         /// TryGetValueByKey used to get AppSettings keys where the values are being converted from the stored string to some other data type
         /// If exception occurs, default value of T is returned.
         /// </summary>
@@ -39,5 +30,14 @@
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         T TryGetValueByKey<T>(string key);
+
+        /// <summary>
+        /// TryGetValueCollectionByKey used to get AppSettings keys where the values represent collections (lists).
+        /// If exception occurs, empty collection of T is returned.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        IEnumerable<T> TryGetValueCollectionByKey<T>(string key);
     }
 }
