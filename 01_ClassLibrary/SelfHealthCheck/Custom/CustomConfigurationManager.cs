@@ -12,6 +12,8 @@
     /// </summary>
     public class CustomConfigurationManager : Interfaces.ICustomConfigurationManager
     {
+        // ToDo: Write tests for this class
+
         /// <summary>
         /// AppSettings used to get the AppSettings key where the value is an actual string that doesn't need to be converted to something else.
         /// Caller will need to handle any exception.
